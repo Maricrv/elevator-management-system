@@ -55,18 +55,6 @@ const Sidebar = ({ collapsed }) => {
       path: "/projects",
       label: "Projects",
       icon: <FolderOutlined />,
-      children: [
-        {
-          key: "/projects/manage",
-          path: "/projects",
-          label: "View Projects",
-        },
-        {
-          key: "/projects/assignpersonnel1",
-          path: "/projects/assignpersonnel",
-          label: "Assign Personnel", // New submenu for assigning personnel
-        },
-      ],
     },
     {
       key: "/project-assignments",

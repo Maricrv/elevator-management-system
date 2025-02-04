@@ -10,7 +10,7 @@ import ClientManager from "./pages/Clients/ClientManager";
 import ClientDetails from "./pages/Clients/ClientDetails";
 import ProjectManager from "./pages/Projects/ProjectManager";
 import ProjectDetails from "./pages/Projects/ProjectDetails";
-import AssignPersonnel1 from "./pages/Projects/AssignPersonnel";
+
 import PersonnelManager from "./pages/Personnel/PersonnelManager";
 import PersonnelDetails from "./pages/Personnel/PersonnelDetails";
 import SaleManager from "./pages/Sales/SaleManager"; // Sales Page
@@ -73,8 +73,7 @@ function App() {
                 <Route path="/clients/:id" element={<ClientDetails />} />
                 <Route path="/projects" element={<ProjectManager />} />
                 <Route path="/projects/:id" element={<ProjectDetails />} />
-                <Route path="/projects/AssignPersonnel" element={<AssignPersonnel1 />} />
-
+                
                 <Route path="/personnel" element={<PersonnelManager />} />
                 <Route path="/personnel/:id" element={<PersonnelDetails />} />
                 <Route path="/sales" element={<SaleManager />} /> {/* Sales List */}
