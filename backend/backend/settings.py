@@ -35,7 +35,7 @@ SECRET_KEY = 'django-insecure-)@5n&&97(d(nnv$gp1kebw)*edoe=ic1-)c#w_utxr$qkqqqd5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'your-deployment-domain.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'elevator-management-system.onrender.com',]
 
 
 # Application definition
