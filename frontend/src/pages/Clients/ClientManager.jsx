@@ -126,6 +126,11 @@ const ClientManager = () => {
       key: "client_abbreviation",
     },
     {
+      title: "Client contact",
+      dataIndex: "client_contact",
+      key: "client_contact",
+    },
+    {
       title: "Phone",
       dataIndex: "phone",
       key: "phone",

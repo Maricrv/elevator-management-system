@@ -44,6 +44,15 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
       </Row>
 
       <Row gutter={16}>
+      <Col span={12}>
+          <Form.Item
+            label="Client contact"
+            name="client_contact"
+            rules={[{ required: true, message: "Please enter the client contact" }]}
+          >
+            <Input placeholder="Enter client contact" />
+          </Form.Item>
+        </Col>
         <Col span={12}>
           <Form.Item
             label="Email"
@@ -53,7 +62,11 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
             <Input placeholder="Enter email" />
           </Form.Item>
         </Col>
-        <Col span={12}>
+
+      </Row>
+
+      <Row gutter={16}>
+      <Col span={12}>
           <Form.Item
             label="Phone"
             name="phone"
@@ -65,9 +78,6 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
             <Input placeholder="Enter phone number" />
           </Form.Item>
         </Col>
-      </Row>
-
-      <Row gutter={16}>
         <Col span={12}>
           <Form.Item
             label="Address"
@@ -77,7 +87,10 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
             <Input placeholder="Enter address" />
           </Form.Item>
         </Col>
-        <Col span={12}>
+      </Row>
+
+      <Row gutter={16}>
+      <Col span={12}>
           <Form.Item
             label="City"
             name="city"
@@ -86,9 +99,6 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
             <Input placeholder="Enter city" />
           </Form.Item>
         </Col>
-      </Row>
-
-      <Row gutter={16}>
         <Col span={12}>
           <Form.Item
             label="Country"
@@ -98,6 +108,8 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
             <Input placeholder="Enter country" />
           </Form.Item>
         </Col>
+      </Row>
+      <Row gutter={16}>
         <Col span={12}>
           <Form.Item
             label="Project Count"

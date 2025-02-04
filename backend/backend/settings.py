@@ -10,8 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+
+
+from decouple import config
 from pathlib import Path
 import os
+import dj_database_url
 
 
 
@@ -31,7 +35,7 @@ SECRET_KEY = 'django-insecure-)@5n&&97(d(nnv$gp1kebw)*edoe=ic1-)c#w_utxr$qkqqqd5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'your-deployment-domain.com']
 
 
 # Application definition
@@ -85,19 +89,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+
 import dj_database_url
+from decouple import config
+from pathlib import Path
 import os
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 DATABASES = {
-    """'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_prueba',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }"""
-    'default': dj_database_url.config(default=os.getenv("postgresql://dbadmin:ZUSEzyj1ebwNXoveLligptDqs9gA48UL@dpg-cuh1ptd6l47c73bco14g-a.oregon-postgres.render.com/dbprueba10"))
+    'default': dj_database_url.config(default=config("DATABASE_URL", default="sqlite:///db.sqlite3"))
 }
 
 

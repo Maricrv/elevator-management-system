@@ -52,6 +52,7 @@ const ClientDetails = () => {
         <Descriptions bordered column={2}>
           <Descriptions.Item label="Client Name">{client.client_name}</Descriptions.Item>
           <Descriptions.Item label="Abbreviation">{client.client_abbreviation}</Descriptions.Item>
+          <Descriptions.Item label="Client contact">{client.client_contact}</Descriptions.Item>
           <Descriptions.Item label="Email">{client.email}</Descriptions.Item>
           <Descriptions.Item label="Phone">{client.phone}</Descriptions.Item>
           <Descriptions.Item label="Address">{client.address || "N/A"}</Descriptions.Item>
