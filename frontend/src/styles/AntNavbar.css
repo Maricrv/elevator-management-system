@@ -1,0 +1,76 @@
+/* Navbar (Header) Customization */
+.ant-layout-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px; /* Default Ant Design navbar height */
+  z-index: 20;
+  background: linear-gradient(135deg, #f1f1f1, #e0e0e0); /* Soft lighter grey gradient */
+  border-bottom: 1px solid #cccccc; /* Subtle border for separation */
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  color: #3c4043;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Navbar Logo */
+.logo {
+  display: flex;
+  align-items: center;
+}
+.logo img {
+  max-height: 40px;
+  object-fit: contain;
+  margin-right: 10px;
+}
+.logo span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #3c4043; /* Slightly darker grey */
+}
+
+/* Navbar Actions */
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.action {
+  color: #6c757d;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.action:hover {
+  color: #0056b3; /* Blue hover color */
+}
+.logout-btn {
+  background: #ff6b6b;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.logout-btn:hover {
+  background: #e63946; /* Slightly darker red on hover */
+  transform: scale(1.05); /* Add subtle zoom */
+}
+
+.ant-layout-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px; /* Navbar height */
+  z-index: 20; /* Above sidebar */
+  background: #f0f2f5;
+  border-bottom: 1px solid #f0f0f0; /* Subtle border */
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}

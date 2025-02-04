@@ -1,0 +1,57 @@
+/* General styles for body and layout */
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  background: linear-gradient(135deg, #f9f9f9, #f4f4f4); /* Softer light grey gradient */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+/* Ant Design Layout */
+.ant-layout {
+  display: flex;
+}
+
+/* Login Page Customization */
+.login-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.login-page-container .login-form {
+  max-width: 400px;
+  background: #f0f2f5;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Global Reset for Inputs and Buttons */
+button, input {
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+input:focus, button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.content-area {
+  margin-top: 64px; /* Prevent overlap with navbar */
+  margin-left: 200px; /* Prevent overlap with sidebar */
+  padding: 16px;
+  background: #f0f2f5;
+  transition: margin-left 0.3s ease;
+}
+
+.custom-sider-collapsed + .content-area {
+  margin-left: 80px; /* Adjust margin for collapsed sidebar */
+}

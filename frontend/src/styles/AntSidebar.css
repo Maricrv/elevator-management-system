@@ -1,0 +1,131 @@
+/* ----------------------------------- */
+/* Sidebar (Sider) Customization       */
+/* ----------------------------------- */
+
+/* General Sidebar Styling */
+.ant-layout-sider {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  height: 100vh;
+  background:  #f0f2f5; /* Light grey gradient */
+  z-index: 10; /* Place below navbar */
+  transition: all 0.3s ease;
+  border-right: 1px solid #f0f2f5; /* Subtle border for separation */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+/* Adjusted Sidebar for Navbar */
+.custom-sider {
+  top: 64px; /* Offset for navbar height */
+  height: calc(100vh - 64px); /* Full height minus navbar */
+}
+
+/* Collapsed Sidebar */
+.ant-layout-sider-collapsed {
+  width: 80px !important;
+}
+
+/* ----------------------------------- */
+/* Sidebar Menu Styling                */
+/* ----------------------------------- */
+
+/* General Menu Styles */
+.ant-menu-light {
+  background: transparent; /* Inherit gradient from sidebar */
+}
+
+.ant-menu-light .ant-menu-item {
+  display: flex;
+  align-items: center;
+  border-radius: 8px; /* Rounded corners */
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Menu Item Hover Effect */
+.ant-menu-light .ant-menu-item:hover {
+  background: rgba(100, 149, 237, 0.3); /* Light Cornflower Blue hover */
+}
+
+/* Selected Menu Item */
+.ant-menu-light .ant-menu-item-selected {
+  background: rgba(100, 149, 237, 0.3); /* Selected item background */
+  border-radius: 8px;
+}
+
+/* Sidebar Icons and Text */
+.ant-menu-item .anticon {
+  font-size: 20px;
+  color: #3c4043; /* Icon color matches text */
+}
+
+.ant-menu-item span {
+  font-size: 16px;
+  color: #3c4043; /* Slightly darker grey for text */
+}
+
+/* Hover and Selected States for Icons and Text */
+.ant-menu-item:hover .anticon,
+.ant-menu-item:hover span {
+  color: #0056b3; /* Blue hover effect for both */
+}
+
+.ant-menu-item-selected .anticon,
+.ant-menu-item-selected span {
+  color: #0056b3; /* Blue color for selected state */
+}
+
+/* Center Align Icons for Collapsed State */
+.ant-menu-item-only-child {
+  justify-content: center;
+}
+
+/* ----------------------------------- */
+/* Content Styling Related to Sidebar  */
+/* ----------------------------------- */
+
+/* General Content Styling */
+.ant-layout-content {
+  margin-left: 200px; /* Match expanded sidebar width */
+  padding: 16px;
+  background-color: #ffffff; /* White background */
+  border-radius: 8px; /* Rounded corners for content */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: margin-left 0.3s ease;
+}
+
+/* Adjust Content Margin for Collapsed Sidebar */
+.ant-layout-sider-collapsed + .ant-layout-content {
+  margin-left: 80px; /* Match collapsed sidebar width */
+}
+
+/* ----------------------------------- */
+/* Sidebar Trigger Button Customization */
+/* ----------------------------------- */
+
+/* Trigger Button (Collapsed Sidebar) */
+.ant-layout-sider-collapsed .ant-layout-sider-trigger {
+  background-color: #e8e9eb !important; /* Light grey background */
+  color:  #3c4043 !important; /* Dark grey icon */
+  border-top: 1px solid #cccccc; /* Subtle top border */
+}
+
+/* Trigger Button Hover (Collapsed Sidebar) */
+.ant-layout-sider-collapsed .ant-layout-sider-trigger:hover {
+  background-color: #3c4043 !important; /* Slightly lighter grey */
+  color: #0056b3 !important; /* Blue hover effect */
+}
+
+/* Trigger Button (Expanded Sidebar) */
+.ant-layout-sider-trigger {
+  background-color: #e8e9eb !important; /* Match sidebar background */
+  color: #3c4043 !important; /* Match text/icon color */
+  border-top: 1px solid #cccccc; /* Subtle border for separation */
+}
+
+/* Trigger Button Hover (Expanded Sidebar) */
+.ant-layout-sider-trigger:hover {
+  background-color: #d6d8dc !important; /* Slightly lighter grey */
+  color: #0056b3 !important; /* Blue hover effect */
+}
