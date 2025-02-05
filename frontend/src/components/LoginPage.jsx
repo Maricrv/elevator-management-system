@@ -18,16 +18,17 @@ function LoginPage({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000"; 
+
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/auth/login/", {
+      const response = await axios.post(`${API_BASE_URL}/auth/login/`, {
         username,
         password,
       });
-
-      // Assuming the login is successful
+  
       alert("Login successful!");
-      onLogin(); // Call the login handler to update the state in App
+      onLogin();
     } catch (error) {
       alert("Login failed: " + (error.response?.data?.error || "Unknown error"));
     }
