@@ -1,5 +1,10 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; // ✅ Correct import
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FaSpinner } from "react-icons/fa";
+
 import {
   MDBBtn,
   MDBContainer,
@@ -10,41 +15,50 @@ import {
   MDBCol,
   MDBInput,
 } from "mdb-react-ui-kit";
-import "../App.css"; // Ensure correct relative path to App.css
-import { Link } from "react-router-dom";
 
+import "../App.css";
 
 function LoginPage({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000"; 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
 
   const handleLogin = async () => {
+    if (!username || !password) {
+      toast.warn("Please enter both username and password.");
+      return;
+    }
+
+    setLoading(true); // Start loading state
+
     try {
       const response = await axios.post(`${API_BASE_URL}/auth/login/`, {
         username,
         password,
       });
-  
+
+      toast.success("Login successful! Redirecting...");
       onLogin();
       
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000); // Redirect after delay for smooth transition
+      
     } catch (error) {
-      alert("Login failed: " + (error.response?.data?.error || "Unknown error"));
+      toast.error("Login failed: " + (error.response?.data?.error || "Unknown error"));
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   return (
     <MDBContainer className="login-page-container">
-      <MDBCard
-        style={{
-          maxWidth: "900px",
-          width: "100%",
-          borderRadius: "20px",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-          background: "#fff", // Ensure the card stays white
-        }}
-      >
+      <ToastContainer /> {/* Toast Notification Container */}
+
+      <MDBCard className="login-card">
         <MDBRow className="g-0">
           {/* Left Section with Image */}
           <MDBCol md="5" className="d-none d-md-block">
@@ -64,16 +78,12 @@ function LoginPage({ onLogin }) {
                 <img
                   src="/img1 logo.jpg"
                   alt="Logo"
-                  style={{
-                    width: "250px",
-                    height: "80px",
-                    objectFit: "contain",
-                  }}
+                  className="login-logo"
                 />
               </div>
 
               {/* Form Title */}
-              <h5 className="fw-normal mb-4" style={{ letterSpacing: "1px", color: "#333" }}>
+              <h5 className="fw-normal mb-4 login-title">
                 Sign into your account
               </h5>
 
@@ -85,6 +95,7 @@ function LoginPage({ onLogin }) {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                disabled={loading}
               />
               <MDBInput
                 wrapperClass="mb-4 w-100"
@@ -93,16 +104,17 @@ function LoginPage({ onLogin }) {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
               />
 
-              {/* Login Button */}
+              {/* Login Button with Spinner */}
               <MDBBtn
-                className="mb-3 w-100"
+                className="fixed-button"
                 color="dark"
                 onClick={handleLogin}
-                style={{ padding: "10px 0", fontSize: "16px" }}
+                disabled={loading}
               >
-                Login
+                {loading ? <FaSpinner className="spinner" /> : "Login"}
               </MDBBtn>
 
               {/* Forgot Password */}
@@ -111,9 +123,9 @@ function LoginPage({ onLogin }) {
               </a>
 
               {/* Registration Link */}
-              <p className="mb-4" style={{ color: "#393f81" }}>
+              <p className="mb-4">
                 Don't have an account?{" "}
-                <Link to="/register" style={{ color: "#319ed6", fontWeight: "500" }}>
+                <Link to="/register" className="register-link">
                   Register here
                 </Link>
               </p>

@@ -2,8 +2,8 @@
 body {
   margin: 0;
   font-family: "Roboto", sans-serif;
-  background: linear-gradient(135deg, #f9f9f9, #f4f4f4); /* Softer light grey gradient */
-  overflow-x: hidden; /* Prevent horizontal scrolling */
+  background: linear-gradient(135deg, #f9f9f9, #f4f4f4);
+  overflow-x: hidden;
 }
 
 html, body {
@@ -11,12 +11,7 @@ html, body {
   height: 100%;
 }
 
-/* Ant Design Layout */
-.ant-layout {
-  display: flex;
-}
-
-/* Login Page Customization */
+/* Login Page Styles */
 .login-page-container {
   display: flex;
   justify-content: center;
@@ -25,33 +20,58 @@ html, body {
   padding: 20px;
 }
 
-.login-page-container .login-form {
-  max-width: 400px;
-  background: #f0f2f5;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.login-card {
+  max-width: 900px;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: #fff;
 }
 
-/* Global Reset for Inputs and Buttons */
-button, input {
-  border-radius: 4px;
-  transition: all 0.2s ease;
+/* Logo */
+.login-logo {
+  width: 250px;
+  height: 80px;
+  object-fit: contain;
 }
 
-input:focus, button:focus {
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+/* Login Title */
+.login-title {
+  letter-spacing: 1px;
+  color: #333;
 }
 
-.content-area {
-  margin-top: 64px; /* Prevent overlap with navbar */
-  margin-left: 200px; /* Prevent overlap with sidebar */
-  padding: 16px;
-  background: #f0f2f5;
-  transition: margin-left 0.3s ease;
+/* Button - Fixed Size and Alignment */
+.fixed-button {
+  width: 150px !important;
+  height: 50px !important;
+  font-size: 16px;
+  padding: 10px 0;
+  text-align: center;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.custom-sider-collapsed + .content-area {
-  margin-left: 80px; /* Adjust margin for collapsed sidebar */
+/* Spinner Animation */
+.spinner {
+  animation: spin 1s linear infinite;
+  font-size: 18px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Registration Link */
+.register-link {
+  color: #319ed6;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.register-link:hover {
+  text-decoration: underline;
 }
