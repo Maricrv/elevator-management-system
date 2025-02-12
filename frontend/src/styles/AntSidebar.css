@@ -129,3 +129,23 @@
   background-color: #d6d8dc !important; /* Slightly lighter grey */
   color: #0056b3 !important; /* Blue hover effect */
 }
+
+/* Remove underline from all sidebar links */
+.ant-menu a {
+  text-decoration: none !important;
+}
+
+/* Ensure hover does not add underline */
+.ant-menu a:hover {
+  text-decoration: none !important;
+}
+
+/* Ensure selected items do not have underlines */
+.ant-menu-item-selected a {
+  text-decoration: none !important;
+}
+
+/* Ensure submenu links don't get underlined */
+.ant-menu-submenu a {
+  text-decoration: none !important;
+}

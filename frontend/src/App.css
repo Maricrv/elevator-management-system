@@ -1,9 +1,32 @@
 /* General styles for body and layout */
 body {
   margin: 0;
-  font-family: "Roboto", sans-serif;
+  font-family: "Inter", "Roboto", "Segoe UI", sans-serif !important;
+  font-size: 16px;
+  font-weight: 400;
+  color: #333;
   background: linear-gradient(135deg, #f9f9f9, #f4f4f4);
   overflow-x: hidden;
+}
+
+/* Standardizing Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Inter", sans-serif !important;
+  font-weight: 600;
+}
+
+/* Standardize Ant Design components */
+.ant-menu,
+.ant-table,
+.ant-btn,
+.ant-card,
+.ant-typography {
+  font-family: "Inter", "Roboto", sans-serif !important;
+}
+
+/* Standardizing Buttons */
+button, .ant-btn {
+  font-family: "Inter", sans-serif !important;
 }
 
 html, body {
@@ -73,5 +96,5 @@ html, body {
 }
 
 .register-link:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }

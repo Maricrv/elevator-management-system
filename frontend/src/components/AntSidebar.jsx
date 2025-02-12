@@ -8,15 +8,12 @@ import {
   FolderOutlined,
   GoldOutlined,
   BarChartOutlined,
-  AppstoreOutlined,
-  ToolOutlined,
-  SettingOutlined,
+  UserSwitchOutlined,
   TeamOutlined,
   LogoutOutlined,
-  UserSwitchOutlined,
 } from "@ant-design/icons";
-import MenuItem from "antd/es/menu/MenuItem";
-import SubMenu from "antd/es/menu/SubMenu";
+
+const { SubMenu } = Menu; // Correct import for SubMenu
 
 const Sidebar = ({ collapsed }) => {
   const menuItems = [
@@ -50,7 +47,7 @@ const Sidebar = ({ collapsed }) => {
         },
       ],
     },
-{
+    {
       key: "/projects",
       path: "/projects",
       label: "Projects",
@@ -58,13 +55,13 @@ const Sidebar = ({ collapsed }) => {
     },
     {
       key: "/project-assignments",
-      label: "Project Assignments",
+      label: "Assignments",
       icon: <UserSwitchOutlined />,
       children: [
         {
           key: "/project-assignments/view",
           path: "/project-assignments",
-          label: "View Assignments",
+          label: "Assignments",
         },
         {
           key: "/project-assignments/assignpersonnel",
@@ -96,23 +93,30 @@ const Sidebar = ({ collapsed }) => {
   return (
     <Menu
       theme="light"
-      mode="inline"
       defaultSelectedKeys={[window.location.pathname]}
-      style={{ height: "100%" }}
+      style={{
+        height: "100%",
+        fontSize: "15px", // Standardized font size
+        fontWeight: "500", // Slightly bold for readability
+      }}
     >
       {menuItems.map((item) =>
         item.children ? (
           <SubMenu key={item.key} title={item.label} icon={item.icon}>
             {item.children.map((child) => (
-              <MenuItem key={child.key}>
-                <Link to={child.path}>{!collapsed && child.label}</Link>
-              </MenuItem>
+              <Menu.Item key={child.key}>
+                <Link to={child.path} style={{ width: "100%", display: "block" }}>
+                  {!collapsed && child.label}
+                </Link>
+              </Menu.Item>
             ))}
           </SubMenu>
         ) : (
-          <MenuItem key={item.key} icon={item.icon}>
-            <Link to={item.path}>{!collapsed && item.label}</Link>
-          </MenuItem>
+          <Menu.Item key={item.key} icon={item.icon}>
+            <Link to={item.path} style={{ width: "100%", display: "block" }}>
+              {!collapsed && item.label}
+            </Link>
+          </Menu.Item>
         )
       )}
     </Menu>

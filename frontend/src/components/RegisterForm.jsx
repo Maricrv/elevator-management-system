@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { register } from "../services/authService";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FaSpinner } from "react-icons/fa";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -8,50 +11,50 @@ const RegisterForm = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "Technician", // Default role
+    role: "Technician",
   });
-
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Password validation
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match. Please try again.");
+      toast.error("Passwords do not match. Please try again.");
       return;
     }
 
+    setLoading(true); // Start loading
     try {
       await register({
         username: formData.username,
         email: formData.email,
         password: formData.password,
         role: formData.role,
-      }); // Call the register function
-      alert("Registration successful! Redirecting to login...");
-      navigate("/"); // Redirect to login page
+      });
+
+      toast.success("Registration successful! Redirecting...");
+      setTimeout(() => navigate("/"), 2000); // Redirect after success
     } catch (error) {
-      alert("Registration failed: " + (error.response?.data?.message || "Unknown error"));
+      toast.error("Registration failed: " + (error.response?.data?.message || "Unknown error"));
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   return (
     <div style={styles.container}>
+      <ToastContainer /> {/* Toast notifications container */}
+      
       <form onSubmit={handleSubmit} style={styles.form}>
         {/* Logo */}
         <div style={styles.logoContainer}>
-          <img
-            src="/img1 logo.jpg" // Replace with the actual path to your logo
-            alt="Logo"
-            style={styles.logo}
-          />
+          <img src="/img1 logo.jpg" alt="Logo" style={styles.logo} />
         </div>
 
-        {/* Form Header */}
-        <h2 style={styles.header}>Register</h2>
+        <h2 style={styles.header}>Create an Account</h2>
 
-        {/* Username Field */}
+        {/* Username Input */}
         <input
           type="text"
           placeholder="Username"
@@ -61,7 +64,7 @@ const RegisterForm = () => {
           required
         />
 
-        {/* Email Field */}
+        {/* Email Input */}
         <input
           type="email"
           placeholder="Email"
@@ -71,7 +74,7 @@ const RegisterForm = () => {
           required
         />
 
-        {/* Password Field */}
+        {/* Password Input */}
         <input
           type="password"
           placeholder="Password"
@@ -81,7 +84,7 @@ const RegisterForm = () => {
           required
         />
 
-        {/* Confirm Password Field */}
+        {/* Confirm Password Input */}
         <input
           type="password"
           placeholder="Confirm Password"
@@ -101,9 +104,9 @@ const RegisterForm = () => {
           <option value="Admin">Admin</option>
         </select>
 
-        {/* Submit Button */}
-        <button type="submit" style={styles.button}>
-          Register
+        {/* Submit Button with Spinner */}
+        <button type="submit" style={styles.button} disabled={loading}>
+          {loading ? <FaSpinner className="spinner" /> : "Register"}
         </button>
       </form>
     </div>
@@ -116,7 +119,7 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #f7f7f7, #eaeaea)", // Light gray gradient
+    background: "linear-gradient(135deg, #f7f7f7, #eaeaea)",
     padding: "20px",
   },
   form: {
@@ -146,21 +149,21 @@ const styles = {
   },
   input: {
     width: "100%",
-    padding: "10px",
+    padding: "12px",
     margin: "10px 0",
     border: "1px solid #ccc",
     borderRadius: "5px",
     fontSize: "16px",
     outline: "none",
+    transition: "border 0.3s",
   },
   select: {
     width: "100%",
-    padding: "10px",
+    padding: "12px",
     margin: "10px 0",
     border: "1px solid #ccc",
     borderRadius: "5px",
     fontSize: "16px",
-    outline: "none",
     background: "#fff",
   },
   button: {
