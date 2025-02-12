@@ -27,8 +27,8 @@ function LoginPage({ onLogin }) {
         password,
       });
   
-      alert("Login successful!");
       onLogin();
+      
     } catch (error) {
       alert("Login failed: " + (error.response?.data?.error || "Unknown error"));
     }
