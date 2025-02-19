@@ -40,8 +40,8 @@ const ProformaManager = () => {
     const lowerCaseQuery = searchQuery.toLowerCase();
     const filtered = proformas.filter(
       (p) =>
-        p.project_name.toLowerCase().includes(lowerCaseQuery) || // Search by Project Name
-        p.client_name.toLowerCase().includes(lowerCaseQuery)    // Search by Client Name
+        (p.project_name?.toLowerCase() || "").includes(lowerCaseQuery) || // Search by Project Name
+        (p.client_name?.toLowerCase() || "").includes(lowerCaseQuery)    // Search by Client Name
     );
     setFilteredProformas(filtered);
   }, [proformas, searchQuery]);
@@ -76,13 +76,12 @@ const ProformaManager = () => {
         );
       }
 
-      setProformas((prev) =>
-        editingProforma
-          ? prev.map((p) => (p.proforma_id === editingProforma.proforma_id ? response.data : p))
-          : [...prev, response.data]
-      );
 
       message.success("Proforma saved successfully!");
+       
+      // ✅ Refresh proformas list from backend to reflect changes
+      await fetchProformas();
+
       setIsModalVisible(false);
       setEditingProforma(null);
       form.resetFields();
@@ -188,6 +187,11 @@ const ProformaManager = () => {
           onClick={() => {
             setEditingProforma(null);
             setIsModalVisible(true);
+                
+            // ✅ Ensure the form resets properly on the next tick
+            setTimeout(() => {
+              form.resetFields();
+            }, 100);
           }}
         >
           Add Proforma

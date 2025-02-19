@@ -82,7 +82,7 @@ class Projects(models.Model):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
-    sale = models.ForeignKey('Sales', on_delete=models.DO_NOTHING, blank=True, null=True)
+    sale = models.OneToOneField('Sales', on_delete=models.DO_NOTHING, blank=True, null=True)
     status = models.ForeignKey(ProjectStatus, on_delete=models.DO_NOTHING, blank=True, null=True)
     type = models.ForeignKey('ProjectTypes', on_delete=models.DO_NOTHING, blank=True, null=True)
 
@@ -105,19 +105,20 @@ class Proformas(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=[('Pending', 'Pending'), ('Accepted', 'Accepted'), ('Rejected', 'Rejected')])
     technical_details_pdf = models.FileField(upload_to='order_forms/', blank=True, null=True)  # Nuevo campo para el PDF
-    
+    is_converted_to_sale = models.BooleanField(default=False)
+
     class Meta:
         db_table = 'proformas'
 
 class Sales(models.Model):
     sale_id = models.AutoField(primary_key=True)
-    proforma = models.ForeignKey(Proformas, on_delete=models.CASCADE, blank=True, null=True, related_name="sales")
+    proforma = models.OneToOneField(Proformas, on_delete=models.CASCADE, blank=True, null=True, related_name="sales")
     client = models.ForeignKey(Clients, on_delete=models.CASCADE, null=True, blank=True)
     payment_method = models.CharField(max_length=50, blank=True, null=True)
     notes = models.CharField(max_length=256, blank=True, null=True)
     model = models.ForeignKey('ElevatorModels', on_delete=models.DO_NOTHING, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    paid = models.BooleanField(blank=True, null=True)
+    paid = models.BooleanField(default=False)
     payment_date = models.DateField(blank=True, null=True)
 
     class Meta:

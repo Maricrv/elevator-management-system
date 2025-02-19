@@ -125,7 +125,7 @@ const Sales = () => {
           onChange={(e) => handleSearch(e.target.value)}
           style={{ width: "300px" }}
         />
-        <Button type="primary" onClick={() => { setEditingSale(null); setIsModalVisible(true); }}>Add Sale</Button>
+        
       </div>
       <Table
         columns={columns}
