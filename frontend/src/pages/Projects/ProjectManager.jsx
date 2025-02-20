@@ -39,6 +39,7 @@ const ProjectManager = () => {
     setFilteredProjects(
       projects.filter(
         (p) =>
+          p.project_id.toLowerCase().includes(lowerCaseQuery) ||
           p.project_name.toLowerCase().includes(lowerCaseQuery) ||
           (p.client_name && p.client_name.toLowerCase().includes(lowerCaseQuery))
       )
@@ -77,6 +78,7 @@ const ProjectManager = () => {
 
   // Table Columns
   const columns = [
+    { title: "Project Id", dataIndex: "project_id", key: "project_id" },
     { title: "Project Name", dataIndex: "project_name", key: "project_name" },
     { title: "Client", dataIndex: "client_name", key: "client_name" },
     { title: "Start Date", dataIndex: "start_date", key: "start_date" },
