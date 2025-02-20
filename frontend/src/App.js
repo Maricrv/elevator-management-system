@@ -19,7 +19,7 @@ import ProformaManager from "./pages/Sales/ProformaManager";
 import ProformaDetails from "./pages/Sales/ProformaDetails";
 
 // ✅ NEW IMPORTS
-import ProjectAssignmentsList from "./pages/project-assignments/ProjectAssignmentsList";
+import ProjectAssignmentsManager from "./pages/project-assignments/ProjectAssignmentsManager";
 import AssignPersonnel from "./pages/project-assignments/AssignPersonnel";
 import ProjectAssignmentDetails from "./pages/project-assignments/ProjectAssignmentDetails";
 
@@ -82,8 +82,8 @@ function App() {
                 <Route path="/sales/proformadetails/:id" element={<ProformaDetails />} />
 
                 {/* ✅ NEW ROUTES FOR PROJECT ASSIGNMENTS */}
-                <Route path="/project-assignments" element={<ProjectAssignmentsList />} />
-                <Route path="/project-assignments/::assignmentId" element={<ProjectAssignmentDetails />} />
+                <Route path="/project-assignments" element={<ProjectAssignmentsManager />} />
+                <Route path="/project-assignments/:id" element={<ProjectAssignmentDetails />} />
                 <Route path="/project-assignments/AssignPersonnel" element={<AssignPersonnel />} />
 
                 <Route path="/" element={<Navigate to="/dashboard" />} />
