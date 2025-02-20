@@ -20,18 +20,19 @@ const SaleForm = ({ initialValues = {}, onSubmit }) => {
   const navigate = useNavigate();
   const [models, setModels] = useState([]);
   const [proformas, setProformas] = useState([]);
+  const [selectedProforma, setSelectedProforma] = useState(null);
   const [isPaid, setIsPaid] = useState(initialValues?.paid || false);
   const [loadingModels, setLoadingModels] = useState(false);
   const [loadingProformas, setLoadingProformas] = useState(false);
 
-  // Cargar valores iniciales al formulario
+  // Load initial values into the form
   useEffect(() => {
     if (initialValues) {
       form.setFieldsValue({
         ...initialValues,
         payment_date: initialValues.payment_date ? dayjs(initialValues.payment_date) : null,
+        proforma_id: initialValues.proforma || null,
         client_id: initialValues.client || null,
-        proforma_id: initialValues.proforma || null, // Asegurar que se pase proforma_id
       });
       setIsPaid(initialValues?.paid || false);
     }
@@ -66,17 +67,28 @@ const SaleForm = ({ initialValues = {}, onSubmit }) => {
     loadProformas();
   }, []);
 
+  const handleProformaChange = (value) => {
+    const selected = proformas.find((p) => p.proforma_id === value);
+    setSelectedProforma(selected);
+
+    form.setFieldsValue({
+      client_name: selected?.client_name || "",
+      client_id: selected?.client || null,
+    });
+  };
+
   const handleFinish = (values) => {
     const formattedValues = {
       ...values,
       proforma: values.proforma_id,
       client: values.client_id,
       payment_date: isPaid && values.payment_date ? values.payment_date.format("YYYY-MM-DD") : null,
+      payment_method: isPaid ? values.payment_method : null, // Ensure payment method is null if unpaid
     };
 
     console.log("🔍 Sending Data:", JSON.stringify(formattedValues, null, 2));
     onSubmit(formattedValues);
-    form.resetFields();
+
   };
 
   return (
@@ -87,45 +99,48 @@ const SaleForm = ({ initialValues = {}, onSubmit }) => {
       style={{ padding: "16px", background: "#fafafa", borderRadius: "4px" }}
     >
       <Row gutter={16}>
-        {/* Proforma ID Selection */}
+        {/* Proforma ID Selection (Greyed out when editing) */}
         <Col span={12}>
           <Form.Item
             label="Proforma ID"
             name="proforma_id"
             rules={[{ required: true, message: "Please select a proforma" }]}
           >
-            {initialValues?.sale_id ? (
-              <Input value={form.getFieldValue("proforma_id")} readOnly />
-            ) : (
-              <Select
-                placeholder="Select a proforma"
-                showSearch
-                onChange={(value) => {
-                  const selectedProforma = proformas.find((p) => p.proforma_id === value);
-                  form.setFieldsValue({
-                    client_name: selectedProforma?.client_name || "",
-                    client_id: selectedProforma?.client || null,
-                  });
-                }}
-                value={form.getFieldValue("proforma_id") || undefined} // Asegurar valor correcto
-              >
-                {proformas.map((proforma) => (
-                  <Option key={proforma.proforma_id} value={proforma.proforma_id}>
-                    {proforma.proforma_id}
-                  </Option>
-                ))}
-              </Select>
-            )}
+            <Select
+              placeholder="Select a proforma"
+              showSearch
+              onChange={handleProformaChange}
+              value={form.getFieldValue("proforma_id") || undefined}
+              disabled={!!initialValues?.sale_id} // Read-only when editing
+              style={{
+                backgroundColor: initialValues?.sale_id ? "#f5f5f5" : "white", // Grey when editing
+                color: initialValues?.sale_id ? "#888" : "black",
+                cursor: initialValues?.sale_id ? "not-allowed" : "pointer",
+              }}
+            >
+              {proformas.map((proforma) => (
+                <Option key={proforma.proforma_id} value={proforma.proforma_id}>
+                  {proforma.proforma_id}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item name="client_id" hidden>
             <Input />
           </Form.Item>
         </Col>
 
-        {/* Client Name */}
+        {/* Client Name (Always Greyed Out) */}
         <Col span={12}>
           <Form.Item label="Client Name" name="client_name">
-            <Input readOnly />
+            <Input
+              readOnly
+              style={{
+                backgroundColor: "#f5f5f5",
+                color: "#888",
+                cursor: "not-allowed",
+              }}
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -158,7 +173,7 @@ const SaleForm = ({ initialValues = {}, onSubmit }) => {
               onChange={(value) => {
                 setIsPaid(value);
                 if (!value) {
-                  form.setFieldsValue({ payment_date: null });
+                  form.setFieldsValue({ payment_date: null, payment_method: null });
                 }
               }}
             >
@@ -194,14 +209,6 @@ const SaleForm = ({ initialValues = {}, onSubmit }) => {
                 </Option>
               ))}
             </Select>
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col span={24}>
-          <Form.Item label="Notes" name="notes">
-            <Input.TextArea rows={4} />
           </Form.Item>
         </Col>
       </Row>

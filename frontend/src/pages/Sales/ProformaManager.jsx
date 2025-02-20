@@ -101,6 +101,7 @@ const ProformaManager = () => {
   };
 
   const columns = [
+    { title: "Proforma", dataIndex: "proforma_id", key: "proforma_id" },
     { title: "Project Name", dataIndex: "project_name", key: "project_name" },
     { title: "Client", dataIndex: "client_name", key: "client_name" },
     {

@@ -106,7 +106,8 @@ const Sidebar = ({ collapsed }) => {
             {item.children.map((child) => (
               <Menu.Item key={child.key}>
                 <Link to={child.path} style={{ width: "100%", display: "block" }}>
-                  {!collapsed && child.label}
+                {child.label}
+
                 </Link>
               </Menu.Item>
             ))}
@@ -114,7 +115,7 @@ const Sidebar = ({ collapsed }) => {
         ) : (
           <Menu.Item key={item.key} icon={item.icon}>
             <Link to={item.path} style={{ width: "100%", display: "block" }}>
-              {!collapsed && item.label}
+              {!collapsed ? item.label : null}
             </Link>
           </Menu.Item>
         )

@@ -1,4 +1,19 @@
 /* ----------------------------------- */
+/* Variables CSS                       */
+/* ----------------------------------- */
+:root {
+  --corporate-blue: #2d7dd2;
+  --corporate-blue-gray: #324c6c;
+  --light-corporate-blue: #f4f7fb;
+  --hover-background: rgba(55, 125, 220, 0.15);
+  --selected-background: rgba(55, 125, 220, 0.25);
+  --sider-width: 220px;
+  --sider-collapsed-width: 80px;
+  --border-color: #cfd8e3;
+  --shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ----------------------------------- */
 /* Sidebar (Sider) Customization       */
 /* ----------------------------------- */
 
@@ -9,22 +24,34 @@
   left: 0;
   bottom: 0;
   height: 100vh;
-  background:  #f0f2f5; /* Light grey gradient */
-  z-index: 10; /* Place below navbar */
-  transition: all 0.3s ease;
-  border-right: 1px solid #f0f2f5; /* Subtle border for separation */
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  width: var(--sider-width);
+  background: linear-gradient(135deg, var(--light-corporate-blue), #dde3ec);
+  z-index: 10;
+  transition: width 0.3s ease;
+  border-right: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
 }
 
 /* Adjusted Sidebar for Navbar */
 .custom-sider {
-  top: 64px; /* Offset for navbar height */
-  height: calc(100vh - 64px); /* Full height minus navbar */
+  top: 64px;
+  height: calc(100vh - 64px);
 }
 
 /* Collapsed Sidebar */
 .ant-layout-sider-collapsed {
-  width: 80px !important;
+  width: var(--sider-collapsed-width) !important;
+}
+
+/* Sidebar Content Margin */
+.content-expanded {
+  margin-left: var(--sider-width);
+  transition: margin-left 0.3s ease;
+}
+
+.content-collapsed {
+  margin-left: var(--sider-collapsed-width);
+  transition: margin-left 0.3s ease;
 }
 
 /* ----------------------------------- */
@@ -33,47 +60,54 @@
 
 /* General Menu Styles */
 .ant-menu-light {
-  background: transparent; /* Inherit gradient from sidebar */
+  background: transparent;
 }
 
+/* Menu Items */
 .ant-menu-light .ant-menu-item {
   display: flex;
   align-items: center;
-  border-radius: 8px; /* Rounded corners */
+  border-radius: 6px;
   transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* Menu Item Hover Effect */
 .ant-menu-light .ant-menu-item:hover {
-  background: rgba(100, 149, 237, 0.3); /* Light Cornflower Blue hover */
+  background: var(--hover-background);
 }
 
 /* Selected Menu Item */
-.ant-menu-light .ant-menu-item-selected {
-  background: rgba(100, 149, 237, 0.3); /* Selected item background */
-  border-radius: 8px;
+.ant-menu-item-selected,
+.ant-menu-submenu .ant-menu-item-selected {
+  background: var(--selected-background) !important;
+  border-radius: 6px !important;
 }
 
 /* Sidebar Icons and Text */
-.ant-menu-item .anticon {
-  font-size: 20px;
-  color: #3c4043; /* Icon color matches text */
+.ant-menu-item .anticon,
+.ant-menu-submenu-title .anticon {
+  font-size: 18px;
+  color: var(--corporate-blue-gray) !important;
+  transition: color 0.3s ease !important;
 }
 
-.ant-menu-item span {
-  font-size: 16px;
-  color: #3c4043; /* Slightly darker grey for text */
+.ant-menu-item span,
+.ant-menu-submenu-title span,
+.ant-menu-item-selected span,
+.ant-menu-submenu-selected span {
+  font-size: 15px !important;
+  color: var(--corporate-blue-gray) !important;
+  transition: color 0.3s ease !important;
 }
 
 /* Hover and Selected States for Icons and Text */
 .ant-menu-item:hover .anticon,
-.ant-menu-item:hover span {
-  color: #0056b3; /* Blue hover effect for both */
-}
-
+.ant-menu-submenu-title:hover .anticon,
+.ant-menu-item:hover span,
+.ant-menu-submenu-title:hover span,
 .ant-menu-item-selected .anticon,
-.ant-menu-item-selected span {
-  color: #0056b3; /* Blue color for selected state */
+.ant-menu-submenu-selected .anticon {
+  color: var(--corporate-blue) !important;
 }
 
 /* Center Align Icons for Collapsed State */
@@ -82,70 +116,159 @@
 }
 
 /* ----------------------------------- */
+/* Submenu Styling                     */
+/* ----------------------------------- */
+
+/* General Submenu Title Styling */
+.ant-menu-submenu-title {
+  color: var(--corporate-blue-gray) !important;
+}
+
+/* Submenu Title Hover and Selected States */
+.ant-menu-submenu-title:hover,
+.ant-menu-submenu-selected > .ant-menu-submenu-title {
+  color: var(--corporate-blue) !important;
+ 
+  background: var(--hover-background);
+  border-radius: 6px !important;
+}
+
+/* Submenu Items Styling */
+.ant-menu-submenu .ant-menu-item {
+  color: var(--corporate-blue-gray) !important;
+  background: transparent !important;
+  transition: color 0.3s ease, background 0.3s ease;
+}
+
+/* Submenu Items Hover and Selected States */
+.ant-menu-submenu .ant-menu-item:hover,
+.ant-menu-submenu .ant-menu-item-selected {
+  color: var(--corporate-blue) !important;
+  background: var(--selected-background) !important;
+}
+
+/* Submenu Arrow Styling */
+.ant-menu-submenu-arrow {
+  color: var(--corporate-blue-gray) !important;
+}
+
+.ant-menu-submenu-title:hover .ant-menu-submenu-arrow,
+.ant-menu-submenu-selected > .ant-menu-submenu-title .ant-menu-submenu-arrow {
+  color: var(--corporate-blue) !important;
+}
+
+/* ----------------------------------- */
+/* Collapsed Submenu Styling           */
+/* ----------------------------------- */
+
+/* Ensure submenu parent items remain visible when sidebar is collapsed */
+.ant-menu-inline-collapsed .ant-menu-submenu {
+  position: relative;
+  overflow: visible !important;
+}
+
+/* Keep submenu icons visible when collapsed */
+.ant-menu-inline-collapsed .ant-menu-submenu-title .anticon {
+  font-size: 20px;
+  color: var(--corporate-blue);
+  transition: color 0.3s ease;
+}
+
+/* Display submenu items as a floating dropdown when collapsed */
+.ant-menu-inline-collapsed .ant-menu-submenu:hover .ant-menu {
+  display: block !important;
+  position: absolute !important;
+  left: var(--sider-collapsed-width) !important;
+  top: 0 !important;
+  min-width: 220px !important;
+  background: #ffffff !important;
+  padding: 8px 0 !important;
+  border-radius: 6px !important;
+  box-shadow: var(--shadow);
+  z-index: 1000 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transition: opacity 0.1s ease-in-out, visibility 0.1s ease-in-out;
+}
+
+/* Ensure submenu text is visible in collapsed mode */
+.ant-menu-inline-collapsed .ant-menu-submenu:hover .ant-menu-item {
+  color: var(--corporate-blue-gray) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 10px 16px !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+  display: block !important;
+}
+
+/* Hover effect for submenu items in collapsed mode */
+.ant-menu-inline-collapsed .ant-menu-submenu:hover .ant-menu-item:hover {
+  background: var(--hover-background) !important;
+  color: var(--corporate-blue) !important;
+}
+
+/* ----------------------------------- */
 /* Content Styling Related to Sidebar  */
 /* ----------------------------------- */
 
 /* General Content Styling */
 .ant-layout-content {
-  margin-left: 200px; /* Match expanded sidebar width */
+  margin-left: var(--sider-width);
   padding: 16px;
-  background-color: #ffffff; /* White background */
-  border-radius: 8px; /* Rounded corners for content */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
   transition: margin-left 0.3s ease;
 }
 
 /* Adjust Content Margin for Collapsed Sidebar */
 .ant-layout-sider-collapsed + .ant-layout-content {
-  margin-left: 80px; /* Match collapsed sidebar width */
+  margin-left: var(--sider-collapsed-width);
 }
 
 /* ----------------------------------- */
 /* Sidebar Trigger Button Customization */
 /* ----------------------------------- */
 
-/* Trigger Button (Collapsed Sidebar) */
-.ant-layout-sider-collapsed .ant-layout-sider-trigger {
-  background-color: #e8e9eb !important; /* Light grey background */
-  color:  #3c4043 !important; /* Dark grey icon */
-  border-top: 1px solid #cccccc; /* Subtle top border */
-}
+/* Trigger Button (Collapsed and Expanded Sidebar) */
 
-/* Trigger Button Hover (Collapsed Sidebar) */
-.ant-layout-sider-collapsed .ant-layout-sider-trigger:hover {
-  background-color: #3c4043 !important; /* Slightly lighter grey */
-  color: #0056b3 !important; /* Blue hover effect */
-}
-
-/* Trigger Button (Expanded Sidebar) */
 .ant-layout-sider-trigger {
-  background-color: #e8e9eb !important; /* Match sidebar background */
-  color: #3c4043 !important; /* Match text/icon color */
-  border-top: 1px solid #cccccc; /* Subtle border for separation */
+  background: var(--selected-background) !important; /* Match selected item */
+  color: var(--corporate-blue-gray) !important; /* Corporate blue-gray */
+  border-top: 1px solid rgba(255, 255, 255, 0.2); /* Subtle top border */
+  transition: background 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.2s ease;
 }
 
-/* Trigger Button Hover (Expanded Sidebar) */
+/* Sidebar Trigger Button Hover */
 .ant-layout-sider-trigger:hover {
-  background-color: #d6d8dc !important; /* Slightly lighter grey */
-  color: #0056b3 !important; /* Blue hover effect */
+  background: var(--hover-background) !important; /* Match menu hover */
+  color: var(--corporate-blue) !important; /* Corporate blue for better visibility */
+  transform: scale(1.03); /* Soft hover effect */
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08); /* Soft depth */
 }
+
+/* Fix tooltip styling */
+.ant-tooltip-inner {
+  background: var(--selected-background) !important; /* Match sidebar */
+  color: var(--corporate-blue-gray) !important; /* Ensure contrast */
+  font-size: 14px !important;
+  border-radius: 4px !important;
+}
+
+/* Fix tooltip arrow */
+.ant-tooltip-arrow {
+  border-color: var(--corporate-blue-gray) !important;
+}
+
+
+
+
+/* ----------------------------------- */
+/* Additional Fixes for Consistency    */
+/* ----------------------------------- */
 
 /* Remove underline from all sidebar links */
 .ant-menu a {
-  text-decoration: none !important;
-}
-
-/* Ensure hover does not add underline */
-.ant-menu a:hover {
-  text-decoration: none !important;
-}
-
-/* Ensure selected items do not have underlines */
-.ant-menu-item-selected a {
-  text-decoration: none !important;
-}
-
-/* Ensure submenu links don't get underlined */
-.ant-menu-submenu a {
-  text-decoration: none !important;
+  text-decoration: none;
 }
