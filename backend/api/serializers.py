@@ -118,10 +118,11 @@ class ProjectAssignmentSerializer(serializers.ModelSerializer):
     area_status = serializers.IntegerField(source='area_status.area_status_id', required=False)
     area_name = serializers.CharField(source='area.area_name', read_only=True)  # Add area name
     personnel_name = serializers.SerializerMethodField()  # Generate personnel name
-
+    status_description = serializers.CharField(source='area_status.description',  read_only=True) 
+    
     class Meta:
         model = ProjectAssignmentAreaPersonnel
-        fields = ('id', 'project', 'area', 'area_name', 'personnel', 'personnel_name', 'area_status')
+        fields = ('id', 'project', 'area', 'area_name', 'personnel', 'personnel_name', 'area_status', 'status_description')
 
     def get_id(self, obj):
         """ Generates a unique ID based on the composite key """

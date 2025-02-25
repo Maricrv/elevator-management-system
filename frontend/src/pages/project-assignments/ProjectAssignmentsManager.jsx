@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Input, message, Modal, Popconfirm, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import ProjectAssignmentForm from "./ProjectAssignmentForm"; // Importing the form component
+import ProjectAssignmentForm from "./ProjectAssignmentForm";
+import EditAssignmentForm from "./EditAssignmentForm"; // Import the edit form
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
 
@@ -19,13 +20,12 @@ const ProjectAssignmentsManager = () => {
     fetchAssignments();
   }, []);
 
-  // ✅ Fetch project assignments
   const fetchAssignments = async () => {
     setLoading(true);
     try {
       const response = await axios.get(`${API_BASE_URL}/api/project-assignments/`);
       setAssignments(response.data);
-      setFilteredAssignments(response.data); // ✅ Set filtered list initially
+      setFilteredAssignments(response.data);
     } catch (error) {
       message.error("Failed to fetch project assignments.");
     } finally {
@@ -33,19 +33,17 @@ const ProjectAssignmentsManager = () => {
     }
   };
 
-  // ✅ Update filteredAssignments based on searchQuery
   useEffect(() => {
     const lowerCaseQuery = searchQuery.toLowerCase();
     const filtered = assignments.filter(
       (a) =>
-        (a.project?.toString() || "").includes(lowerCaseQuery) || // Search by Project ID
-        (a.area_name?.toLowerCase() || "").includes(lowerCaseQuery) || // Search by Area
-        (a.personnel_name?.toLowerCase() || "").includes(lowerCaseQuery) // Search by Personnel
+        a.project?.toLowerCase().includes(lowerCaseQuery) ||
+        a.area_name?.toLowerCase().includes(lowerCaseQuery) ||
+        a.personnel_name?.toLowerCase().includes(lowerCaseQuery)
     );
     setFilteredAssignments(filtered);
   }, [assignments, searchQuery]);
 
-  // ✅ Save or update an assignment
   const handleSaveAssignment = async (values) => {
     try {
       if (editingAssignment) {
@@ -58,25 +56,24 @@ const ProjectAssignmentsManager = () => {
 
       setIsModalVisible(false);
       setEditingAssignment(null);
-      await fetchAssignments(); // ✅ Refresh list after add/update
+      await fetchAssignments();
     } catch (error) {
       message.error("Failed to save project assignment.");
     }
   };
 
-  // ✅ Delete an assignment
   const handleDeleteAssignment = async (id) => {
     try {
       await axios.delete(`${API_BASE_URL}/api/project-assignments/${id}/`);
       message.success("Project assignment deleted successfully!");
-      await fetchAssignments(); // ✅ Refresh list after delete
+      await fetchAssignments();
     } catch (error) {
       message.error("Failed to delete project assignment.");
     }
   };
 
   const columns = [
-    { title: "Project ID", dataIndex: "project", key: "project" },
+    { title: "Project", dataIndex: "project", key: "project" },
     { title: "Area", dataIndex: "area_name", key: "area_name" },
     { title: "Personnel", dataIndex: "personnel_name", key: "personnel_name" },
     {
@@ -115,10 +112,9 @@ const ProjectAssignmentsManager = () => {
     <div style={{ padding: "16px" }}>
       <h1>Project Assignments Manager</h1>
 
-      {/* ✅ Search input & button aligned to the right */}
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
         <Input.Search
-          placeholder="Search by Project ID, Area, or Personnel"
+          placeholder="Search by Project, Area, or Personnel"
           allowClear
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -135,21 +131,8 @@ const ProjectAssignmentsManager = () => {
         </Button>
       </div>
 
-      {loading ? (
-        <div style={{ textAlign: "center", padding: "20px" }}>
-          <Spin size="large" />
-        </div>
-      ) : (
-        <Table
-          columns={columns}
-          dataSource={filteredAssignments}
-          rowKey="id"
-          pagination={{ pageSize: 8 }}
-          bordered
-        />
-      )}
+      {loading ? <Spin /> : <Table columns={columns} dataSource={filteredAssignments} rowKey="id" pagination={{ pageSize: 8 }} bordered />}
 
-      {/* ✅ Pop-up modal for adding/editing assignments */}
       <Modal
         title={editingAssignment ? "Edit Assignment" : "Add Assignment"}
         open={isModalVisible}
@@ -157,7 +140,11 @@ const ProjectAssignmentsManager = () => {
         footer={null}
         centered
       >
-        <ProjectAssignmentForm initialValues={editingAssignment} onSubmit={handleSaveAssignment} />
+        {editingAssignment ? (
+          <EditAssignmentForm initialValues={editingAssignment} onSubmit={handleSaveAssignment} />
+        ) : (
+          <ProjectAssignmentForm onSubmit={handleSaveAssignment} />
+        )}
       </Modal>
     </div>
   );

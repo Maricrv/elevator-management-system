@@ -55,20 +55,9 @@ const Sidebar = ({ collapsed }) => {
     },
     {
       key: "/project-assignments",
+      path: "/project-assignments",
       label: "Assignments",
       icon: <UserSwitchOutlined />,
-      children: [
-        {
-          key: "/project-assignments/view",
-          path: "/project-assignments",
-          label: "Assignments",
-        },
-        {
-          key: "/project-assignments/assignpersonnel",
-          path: "/project-assignments/assignpersonnel",
-          label: "Assign Personnel",
-        },
-      ],
     },
     {
       key: "/personnel",

@@ -45,6 +45,17 @@ const SalesManager = () => {
     setFilteredSales(filtered);
   }, [sales, searchQuery]);
 
+  // Handle sale deletion
+  const handleDeleteSale = async (saleId) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/api/sales/${saleId}/`);
+      setSales((prevSales) => prevSales.filter((s) => s.sale_id !== saleId));
+      message.success("Sale deleted successfully!");
+    } catch (error) {
+      message.error("Failed to delete sale.");
+    }
+  };
+
   const handleSaveSale = async (values) => {
     try {
       await axios.put(`${API_BASE_URL}/api/sales/${editingSale.sale_id}/`, values);
@@ -94,6 +105,16 @@ const SalesManager = () => {
           >
             Edit
           </Button>
+          <Popconfirm
+            title="Are you sure you want to delete this sale?"
+            onConfirm={() => handleDeleteSale(record.sale_id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="link" danger>
+              Delete
+            </Button>
+          </Popconfirm>
         </>
       ),
     },

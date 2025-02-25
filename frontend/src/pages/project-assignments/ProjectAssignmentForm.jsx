@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Select, Button, message, Table } from "antd";
+import { Form, Select, Button, message, Row, Col } from "antd";
 import axios from "axios";
 
 const { Option } = Select;
@@ -10,207 +10,126 @@ const AssignPersonnel = () => {
   const [areas, setAreas] = useState([]);
   const [personnel, setPersonnel] = useState([]);
   const [areaStatuses, setAreaStatuses] = useState([]);
-  const [assignedProjects, setAssignedProjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedArea, setSelectedArea] = useState(null);
   const [filteredPersonnel, setFilteredPersonnel] = useState([]);
-  const [selectedProject, setSelectedProject] = useState(null); // Track selected project
 
   const [form] = Form.useForm();
 
+  // Fetch Data on Load
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
-        const [projectsRes, areasRes, personnelRes, areaStatusesRes, assignedRes] = await Promise.all([
+        const [projectsRes, areasRes, personnelRes, areaStatusesRes] = await Promise.all([
           axios.get(`${API_BASE_URL}/api/projects/`),
           axios.get(`${API_BASE_URL}/api/areas/`),
           axios.get(`${API_BASE_URL}/api/personnel/`),
           axios.get(`${API_BASE_URL}/api/area-statuses/`),
-          axios.get(`${API_BASE_URL}/api/project-assignments/`),
         ]);
 
-        setProjects(
-          projectsRes.data.map((project) => ({
-            id: project.project_id,
-            name: project.name,
-          }))
-        );
-
-        setAreas(
-          areasRes.data.map((area) => ({
-            id: area.area_id,
-            name: area.area_name,
-          }))
-        );
-
-        setPersonnel(
-          personnelRes.data.map((person) => ({
-            id: person.personnel_id,
-            name: `${person.firstname} ${person.lastname}`,
-            area: person.area,
-          }))
-        );
-
-        setAreaStatuses(
-          areaStatusesRes.data.map((status) => ({
-            id: status.area_status_id,
-            description: status.description,
-          }))
-        );
-
-        setAssignedProjects(assignedRes.data);
+        setProjects(projectsRes.data.map((p) => ({ id: p.project_id, name: p.name })));
+        setAreas(areasRes.data.map((a) => ({ id: a.area_id, name: a.area_name })));
+        setPersonnel(personnelRes.data.map((p) => ({ id: p.personnel_id, name: `${p.firstname} ${p.lastname}`, area: p.area })));
+        setAreaStatuses(areaStatusesRes.data.map((s) => ({ id: s.area_status_id, description: s.description })));
       } catch (error) {
         console.error("Error fetching data:", error);
         message.error("Failed to fetch data. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
+  // Filter Personnel by Selected Area
   useEffect(() => {
     if (selectedArea) {
-      setFilteredPersonnel(personnel.filter((person) => person.area === selectedArea));
+      setFilteredPersonnel(personnel.filter((p) => p.area === selectedArea));
     } else {
       setFilteredPersonnel([]);
     }
   }, [selectedArea, personnel]);
 
-  // Filter assigned personnel based on selected project
-  const filteredAssignments = assignedProjects.filter(
-    (assignment) => assignment.project === selectedProject
-  );
-
+  // Submit New Assignment
   const handleSubmit = async (values) => {
-      setLoading(true);
-      try {
-        const payload = {
-          project: values.project,
-          area: parseInt(values.area, 10),
-          personnel: parseInt(values.personnel, 10),
-          area_status: parseInt(values.area_status, 10),
-        };
+    setLoading(true);
+    try {
+      const payload = {
+        project: String(values.project),
+        area: parseInt(values.area, 10),
+        personnel: parseInt(values.personnel, 10),
+        area_status: parseInt(values.area_status, 10),
+      };
 
-        await axios.post(`${API_BASE_URL}/api/project-assignments/`, payload);
-        message.success("Personnel assigned successfully!");
-        form.resetFields();
-        setSelectedArea(null);
-        setSelectedProject(values.project); // Update selected project after assignment
+      await axios.post(`${API_BASE_URL}/api/project-assignments/`, payload);
+      message.success("Personnel assigned successfully!");
 
-        // Refresh assigned personnel for the selected project
-        const assignedRes = await axios.get(`${API_BASE_URL}/api/project-assignments/`);
-        setAssignedProjects(assignedRes.data);
-      } catch (error) {
-        console.error("Error during submission:", error.response?.data); // 🔹 IMPRIMIR ERROR
-        message.error(`Failed to assign personnel: ${JSON.stringify(error.response?.data)}`);
-      } finally {
-        setLoading(false);
-      }
+      form.resetFields();
+      setSelectedArea(null);
+    } catch (error) {
+      console.error("Error during submission:", error.response?.data);
+      message.error(`Failed to assign personnel: ${JSON.stringify(error.response?.data)}`);
+    } finally {
+      setLoading(false);
+    }
   };
-
-  const columns = [
-    {
-      title: "Area",
-      dataIndex: "area",
-      key: "area",
-      render: (areaId) => areas.find((a) => a.id === areaId)?.name || "Unknown Area",
-    },
-    {
-      title: "Personnel",
-      dataIndex: "personnel",
-      key: "personnel",
-      render: (personnelId) => personnel.find((p) => p.id === personnelId)?.name || "Unknown Personnel",
-    },
-    {
-      title: "Status",
-      dataIndex: "area_status",
-      key: "area_status",
-      render: (statusId) => areaStatuses.find((s) => s.id === statusId)?.description || "Unknown Status",
-    },
-  ];
 
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
-      <h2>Assign Personnel to Project</h2>
+
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
-        <Form.Item
-          name="project"
-          label="Select Project"
-          rules={[{ required: true, message: "Please select a project!" }]}
-        >
-          <Select
-            placeholder="Select a project"
-            notFoundContent="No projects available"
-            onChange={(value) => setSelectedProject(value)}
-          >
-            {projects.map((project) => (
-              <Option key={project.id} value={project.id}>
-                {project.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item name="project" label="Project" rules={[{ required: true, message: "Please select a project!" }]}>
+              <Select placeholder="Select project">
+                {projects.map((p) => (
+                  <Option key={p.id} value={p.id}>
+                    {p.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
 
-        <Form.Item
-          name="area"
-          label="Select Area"
-          rules={[{ required: true, message: "Please select an area!" }]}
-        >
-          <Select
-            placeholder="Select an area"
-            onChange={(value) => setSelectedArea(value)}
-            notFoundContent="No areas available"
-          >
-            {areas.map((area) => (
-              <Option key={area.id} value={area.id}>
-                {area.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+            <Form.Item name="personnel" label="Personnel" rules={[{ required: true, message: "Please select personnel!" }]}>
+              <Select placeholder="Select personnel" disabled={!selectedArea}>
+                {filteredPersonnel.map((p) => (
+                  <Option key={p.id} value={p.id}>
+                    {p.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
 
-        <Form.Item
-          name="personnel"
-          label="Select Personnel"
-          rules={[{ required: true, message: "Please select personnel!" }]}
-        >
-          <Select placeholder="Select personnel" disabled={!selectedArea}>
-            {filteredPersonnel.map((person) => (
-              <Option key={person.id} value={person.id}>
-                {person.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+          <Col span={12}>
+            <Form.Item name="area" label="Area" rules={[{ required: true, message: "Please select an area!" }]}>
+              <Select placeholder="Select area" onChange={(value) => setSelectedArea(value)}>
+                {areas.map((a) => (
+                  <Option key={a.id} value={a.id}>
+                    {a.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
 
-        <Form.Item
-          name="area_status"
-          label="Select Area Status"
-          rules={[{ required: true, message: "Please select an area status!" }]}
-        >
-          <Select placeholder="Select area status" notFoundContent="No statuses available">
-            {areaStatuses.map((status) => (
-              <Option key={status.id} value={status.id}>
-                {status.description}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+            <Form.Item name="area_status" label="Status" rules={[{ required: true, message: "Please select a status!" }]}>
+              <Select placeholder="Select status">
+                {areaStatuses.map((s) => (
+                  <Option key={s.id} value={s.id}>
+                    {s.description}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
-            Assign Personnel
-          </Button>
-        </Form.Item>
+        <Button type="primary" htmlType="submit" loading={loading} block>
+          Assign Personnel
+        </Button>
       </Form>
-
-      <h2>Assigned Personnel for Selected Project</h2>
-      <Table
-        dataSource={filteredAssignments}
-        columns={columns}
-        rowKey={(record) => `${record.project}-${record.area}-${record.personnel}`}
-        pagination={false}
-      />
     </div>
   );
 };

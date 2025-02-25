@@ -20,8 +20,8 @@ import ProformaDetails from "./pages/Sales/ProformaDetails";
 
 // ✅ NEW IMPORTS
 import ProjectAssignmentsManager from "./pages/project-assignments/ProjectAssignmentsManager";
-import AssignPersonnel from "./pages/project-assignments/AssignPersonnel";
 import ProjectAssignmentDetails from "./pages/project-assignments/ProjectAssignmentDetails";
+
 
 import "./App.css";
 import "./styles/AntSidebar.css";
@@ -83,8 +83,7 @@ function App() {
 
                 {/* ✅ NEW ROUTES FOR PROJECT ASSIGNMENTS */}
                 <Route path="/project-assignments" element={<ProjectAssignmentsManager />} />
-                <Route path="/project-assignments/:id" element={<ProjectAssignmentDetails />} />
-                <Route path="/project-assignments/AssignPersonnel" element={<AssignPersonnel />} />
+                <Route path="/project-assignments/details/:id" element={<ProjectAssignmentDetails />} />
 
                 <Route path="/" element={<Navigate to="/dashboard" />} />
                 <Route path="*" element={<h1>404 - Page Not Found</h1>} />
