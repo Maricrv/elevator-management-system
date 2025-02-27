@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { useParams, useNavigate } from "react-router-dom";
-import { Descriptions, Spin, Button, message, Modal } from "antd";
+import { Descriptions, Spin, Button, message, Modal, Popconfirm } from "antd";
+import axios from "axios";
 import SaleForm from "./SaleForm";
-import { fetchSaleById, updateSale } from "../../services/salesService";
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
 
 const SaleDetails = () => {
   const { id } = useParams();
@@ -16,7 +18,8 @@ const SaleDetails = () => {
   const loadSaleDetails = async () => {
     setLoading(true);
     try {
-      const data = await fetchSaleById(id);
+      const response = await axios.get(`${API_BASE_URL}/api/sales/${id}/`);
+      const data = response.data; // Corregido el acceso a los datos
       setSale({
         ...data,
         payment_date: data.payment_date ? dayjs(data.payment_date) : null,
@@ -31,15 +34,23 @@ const SaleDetails = () => {
   // ✅ Handle Save Sale
   const handleSave = async (values) => {
     try {
-      const updatedSale = await updateSale(id, values);
-      setSale({
-        ...updatedSale,
-        payment_date: updatedSale.payment_date ? dayjs(updatedSale.payment_date) : null,
-      });
+      await axios.put(`${API_BASE_URL}/api/sales/${id}/`, values);
       message.success("Sale updated successfully!");
+      loadSaleDetails(); // Refrescar los datos después de la edición
       setIsModalVisible(false);
     } catch (error) {
       message.error("Failed to update sale.");
+    }
+  };
+
+  // ✅ Handle Delete Sale
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${API_BASE_URL}/api/sales/${id}/`);
+      message.success("Sale deleted successfully!");
+      navigate("/sales"); // Redirigir después de eliminar
+    } catch (error) {
+      message.error("Failed to delete sale.");
     }
   };
 
@@ -83,6 +94,17 @@ const SaleDetails = () => {
         {!sale.paid && (
           <Button type="primary" onClick={() => setIsModalVisible(true)}>Edit</Button>
         )}
+
+        <Popconfirm
+          title="Are you sure you want to delete this sale?"
+          onConfirm={handleDelete}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button type="link" danger style={{ marginLeft: "8px" }}>
+            Delete
+          </Button>
+        </Popconfirm>
 
         <Button
           style={{ marginLeft: "8px" }}
