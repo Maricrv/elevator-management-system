@@ -104,7 +104,7 @@ const ProjectManager = () => {
   ];
 
   return (
-    <div style={{ padding: "16px" }}>
+    <div className="page-container" style={{ padding: "16px" }}>
       <h1>Project Manager</h1>
 
       {/* Search Field Only (No Add Button) */}

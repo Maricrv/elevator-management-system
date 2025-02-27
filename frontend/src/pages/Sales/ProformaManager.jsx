@@ -173,7 +173,7 @@ const ProformaManager = () => {
   ];
 
   return (
-    <div style={{ padding: "16px" }}>
+    <div className="page-container" style={{ padding: "16px" }}>
       <h1>Proforma Manager</h1>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
         <Input.Search

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Card, Col, Row, Statistic, Table, message, Spin } from "antd";
-import { Pie, Bar } from "@ant-design/plots";
+import { Pie } from "@ant-design/plots";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import {
   DollarCircleOutlined,
   ProjectOutlined,
   UserOutlined,
   TeamOutlined,
-  FileTextOutlined,
 } from "@ant-design/icons";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
@@ -29,11 +29,9 @@ const Dashboard = () => {
     fetchDashboardData();
   }, []);
 
-  // ✅ Fetch API Data
   const fetchDashboardData = async () => {
+    
     try {
-      console.log("Fetching dashboard data...");
-
       const [clients, projects, sales, personnel, proformas, assignments] = await Promise.all([
         axios.get(`${API_BASE_URL}/api/clients/`),
         axios.get(`${API_BASE_URL}/api/projects/`),
@@ -43,120 +41,90 @@ const Dashboard = () => {
         axios.get(`${API_BASE_URL}/api/project-assignments/`),
       ]);
 
-      console.log("✅ Clients Data:", clients.data);
-      console.log("✅ Projects Data:", projects.data);
-      console.log("✅ Sales Data:", sales.data);
-      console.log("✅ Personnel Data:", personnel.data);
-      console.log("✅ Proformas Data:", proformas.data);
-      console.log("✅ Assignments Data:", assignments.data);
-
-      // ✅ Handle Pagination in Sales API
-      const totalSales = sales.data.count ?? sales.data.results?.length ?? 0;
-      const recentSales = sales.data.results ? sales.data.results.slice(0, 5) : [];
-
-      // ✅ Count project statuses
-      const statusCount = projects.data.reduce((acc, project) => {
+      const projectStatusData = projects.data.reduce((acc, project) => {
         const status = project.status_name || "Unknown";
         acc[status] = (acc[status] || 0) + 1;
         return acc;
       }, {});
-
-      // ✅ Format project status for Pie Chart
-      const projectStatusData = Object.keys(statusCount).map((status) => ({
+      
+      const totalProjects = projects.data.length;
+      const formattedProjectStatusData = Object.keys(projectStatusData).map((status) => ({
         type: status,
-        value: statusCount[status],
+        value: totalProjects > 0 ? ((projectStatusData[status] / totalProjects) * 100) : 0,
       }));
 
       setSummary({
-        totalClients: clients.data.length || 0,
-        totalProjects: projects.data.length || 0,
-        totalSales,
-        totalProformas: proformas.data.length || 0,
-        totalPersonnel: personnel.data.length || 0,
-        totalAssignments: assignments.data.length || 0,
-        projectStatus: projectStatusData,
-        recentSales,
+        totalClients: clients.data.length,
+        totalProjects: projects.data.length,
+        totalSales: sales.data.count,
+        totalPersonnel: personnel.data.length,
+        totalProformas: proformas.data.length,
+        totalAssignments: assignments.data.length,
+        projectStatus: formattedProjectStatusData,
+        recentSales: sales.data.results ? sales.data.results.slice(0, 5) : [],
       });
-
     } catch (error) {
-      console.error("❌ Dashboard API Error:", error.response?.data || error.message);
       message.error("Failed to fetch dashboard data.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Recent Sales Table Columns
-  const salesColumns = [
-    { title: "Proforma #", dataIndex: "proforma", key: "proforma", render: (proforma) => proforma ?? "N/A" },
-    { title: "Client", dataIndex: "client_name", key: "client_name", render: (name) => name ?? "N/A" },
-    { title: "Model", dataIndex: "model_name", key: "model_name", render: (model) => model ?? "N/A" },
-    { title: "Price", dataIndex: "price", key: "price", render: (price) => price ? `$${parseFloat(price).toFixed(2)}` : "N/A" },
-    { title: "Status", dataIndex: "paid", key: "paid", render: (paid) => (paid ? "Paid" : "Unpaid") },
-  ];
-
   return (
-    <div style={{ padding: "16px" }}>
-      <h1>Dashboard</h1>
-
-      {loading ? (
-        <Spin size="large" />
-      ) : (
+    <div className="dashboard-container">
+      <h1 className="dashboard-title">Business Dashboard</h1>
+      {loading ?
+                <Spin />
+              
+       : (
         <>
-          {/* ✅ Summary Cards */}
           <Row gutter={[16, 16]}>
-            <Col xs={12} sm={12} md={6}>
-              <Card>
-                <Statistic title="Total Clients" value={summary.totalClients} prefix={<UserOutlined />} />
-              </Card>
+            <Col xs={24} sm={12} md={6}>
+              <Link to="/clients"  className="link-card"> 
+                <Card className="summary-card clients">
+                  <Statistic title="Total Clients" value={summary.totalClients} prefix={<UserOutlined />} />
+                </Card>
+              </Link>
             </Col>
-            <Col xs={12} sm={12} md={6}>
-              <Card>
-                <Statistic title="Total Projects" value={summary.totalProjects} prefix={<ProjectOutlined />} />
-              </Card>
+            <Col xs={24} sm={12} md={6}>
+              <Link to="/projects" className="link-card">
+                <Card className="summary-card projects">
+                  <Statistic title="Total Projects" value={summary.totalProjects} prefix={<ProjectOutlined />} />
+                </Card>
+              </Link>
             </Col>
-            <Col xs={12} sm={12} md={6}>
-              <Card>
-                <Statistic title="Total Sales" value={summary.totalSales} prefix={<DollarCircleOutlined />} />
-              </Card>
+            <Col xs={24} sm={12} md={6}>
+              <Link to="/sales" className="link-card">
+                <Card className="summary-card sales" >
+                  <Statistic title="Total Sales" value={summary.totalSales} prefix={<DollarCircleOutlined />} />
+                </Card>
+              </Link>
             </Col>
-            <Col xs={12} sm={12} md={6}>
-              <Card>
-                <Statistic title="Total Personnel" value={summary.totalPersonnel} prefix={<TeamOutlined />} />
-              </Card>
-            </Col>
-            <Col xs={12} sm={12} md={6}>
-              <Card>
-                <Statistic title="Total Proformas" value={summary.totalProformas} prefix={<FileTextOutlined />} />
-              </Card>
+            <Col xs={24} sm={12} md={6}>
+              <Link to="/personnel" className="link-card">
+                <Card className="summary-card personnel">
+                  <Statistic title="Total Personnel" value={summary.totalPersonnel} prefix={<TeamOutlined />} />
+                </Card>
+              </Link>
             </Col>
           </Row>
-
-          {/* ✅ Charts and Recent Sales */}
           <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
             <Col xs={24} md={12}>
-              <Card title="Project Status Breakdown">
-                <Pie
-                  data={summary.projectStatus}
-                  angleField="value"
-                  colorField="type"
-                  radius={0.8}
-                  label={{ type: "spider", content: "{name} ({value})" }}
-                  height={250}
-                />
+              <Card title="Project Status Overview" className="chart-card">
+                {summary.projectStatus.length > 0 ? (
+                  <Pie data={summary.projectStatus} angleField="value" colorField="type" radius={0.8} height={250} legend={{ position: 'right' }}
+                  label={{
+                    content: (data) => `${data.value}%`, // Formats labels with %
+                   }}
+                  />
+                ) : (
+                  <p>No project status data available.</p>
+                )}
               </Card>
             </Col>
-
             <Col xs={24} md={12}>
-              <Card title="Recent Sales">
-                <Table
-                  dataSource={summary.recentSales}
-                  columns={salesColumns}
-                  rowKey={(record) => record.sale_id || Math.random()} // ✅ Ensure unique row key
-                  pagination={false}
-                  bordered
-                  locale={{ emptyText: "No recent sales available" }} // ✅ Improved empty state
-                />
+              <Card title="Recent Sales" className="table-card">
+                <Table dataSource={summary.recentSales} columns={[{ title: "Proforma #", dataIndex: "proforma", key: "proforma" }, { title: "Client", dataIndex: "client_name", key: "client_name" }, { title: "Model", dataIndex: "model_name", key: "model_name" }, { title: "Price", dataIndex: "price", key: "price", render: (price) => `$${parseFloat(price).toFixed(2)}` }, { title: "Status", dataIndex: "paid", key: "paid", render: (paid) => (paid ? "Paid" : "Unpaid") }]} pagination={false} bordered />
               </Card>
             </Col>
           </Row>

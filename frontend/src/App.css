@@ -7,7 +7,6 @@ body {
   font-family: "Inter", "Roboto", "Segoe UI", sans-serif !important;
   font-size: 16px;
   font-weight: 400;
-  color: #2c3e50; /* Darker text for better contrast */
   background: linear-gradient(135deg, #e9eff6, #d3dbe5); /* Softer corporate gradient */
   overflow-x: hidden;
 }
@@ -62,6 +61,8 @@ button, .ant-btn {
   background-color: #2467b0; /* Slightly deeper hover effect */
   transform: translateY(-2px);
 }
+
+
 
 /* Registration Link */
 .register-link {
@@ -130,4 +131,57 @@ button, .ant-btn {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+
+
+/* src/pages/Dashboard/Dashboard.css */
+.dashboard-container {
+  padding: 20px;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+  
+}
+
+.page-container {
+  min-height: 100vh;
+  padding: 20px;
+  background:  #f4f6f8; /* Refined, professional look */
+}
+.summary-card {
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+  font-weight: 500;
+  
+}
+
+.summary-card:hover {
+  transform: scale(1.05);
+  background-color:rgba(55, 125, 220, 0.15); 
+  color: #2d7dd2
+}
+
+/* Remove underline and make links look clean */
+.link-card {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  font-weight: bold;
+  display: block; /* Ensures it covers the entire card */
+  
+}
+
+/* Ensure no underline on hover */
+.link-card :hover {
+  color: #2d7dd2; /* Optional: Change color on hover */
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+.chart-card, .table-card {
+  border-radius: 10px;
+}
+
+.loading-spinner {
+  display: flex;
+  margin-top: 50px;
 }
