@@ -1,79 +1,106 @@
-# Elevator Management System – Learning and Prototype Project
+# Elevator Management System  
+**Full-stack learning and portfolio project based on a real-world elevator services use case**
 
-This repository contains an exploratory system created as part of a real-world proposal for an elevator services company in Germany.
+This repository contains a full-stack web application developed as a **personal learning and portfolio project**, inspired by a real operational scenario in an elevator services company in Germany.
 
-The project evolved through multiple stages and was primarily used as a **learning and experimentation initiative**, while also aiming to support a potential business use case.
+The system was designed to explore **modern web application architecture** while addressing common operational challenges such as managing clients, projects, personnel, sales, and reports.
 
 ---
 
 ## Project background
 
-The project originated from a real need identified within an elevator services company that managed operational information mainly through spreadsheets.
+This project originated from a **direct request by an employee of an elevator services company in Germany**, who identified the need for a centralized system to replace spreadsheet-based operational tracking.
 
-Initially, the goal was to help organize this information using a database-driven approach. A first functional prototype was created to demonstrate the idea to stakeholders.
+The initial goal was to develop a **process improvement proposal** that could be presented to company management, demonstrating how operational information (clients, projects, personnel, and sales) could be better organized using a database-driven system instead of Excel.
 
-That initial prototype was later evolved into a more structured system as part of a personal learning process.
+During the development of the proposal, the company underwent a **change of ownership**, and the initiative was discontinued due to organizational restructuring **unrelated to the technical solution**.
+
+After that, the project was continued as a **personal learning and portfolio initiative**, evolving into a more structured and complete full-stack system.
+
+---
+
+## System features
+
+- Authentication and session management (login / logout)
+- Client management
+- Project management
+- Personnel management
+- Project assignments
+- Sales and proforma management
+- Reporting module (projects, sales, proformas)
+- Modular backend and frontend architecture
+- Responsive user interface using Ant Design
+
+---
+
+## Technology stack
+
+- **Backend:** Python, Django, Django REST Framework  
+- **Frontend:** React, Ant Design  
+- **Database:** PostgreSQL  
+- **Version control:** Git, GitHub  
 
 ---
 
 ## Project evolution
 
-The project progressed through two main phases:
+### Phase 1 – Conceptual prototype
+- Rapid prototype created to validate the idea
+- Focus on basic workflows and data organization
+- Deployment to a free hosting platform for demonstration purposes
+- Initial exploration of multilingual support (English, German, Spanish)
 
-### Phase 1 – Functional prototype
-- Creation of a simple prototype to demonstrate the concept  
-- Focus on basic data management and workflows  
-- Deployment to a free hosting platform to allow remote access  
-- Multilingual interface (English, German, Spanish)  
+This phase was used to validate the concept at a business level.
 
-This phase was used to validate the idea at a conceptual level.
-
-### Phase 2 – System redesign and learning focus
-- Redesign of the system with a clearer separation between backend and frontend  
-- Improvement of database structure and data organization  
-- Exploration of APIs and application architecture  
-- Focus on learning modern web application patterns  
-
-This second phase is represented by this repository.
+### Phase 2 – System redesign and learning focus (this repository)
+- Redesign with clear separation between backend and frontend
+- Improved database structure and data modeling
+- Development of REST APIs
+- Implementation of additional modules such as reports
+- Focus on maintainability, scalability concepts, and code organization
 
 ---
 
 ## Learning objectives
 
-The main objectives of this project were to:
+This project was developed to:
 
-- Gain hands-on experience designing a database-backed system  
-- Understand how backend and frontend components interact  
-- Practice working with APIs and application structure  
-- Improve confidence working with databases and deployments  
-- Learn by iterating on a real use case  
+- Gain hands-on experience building a full-stack web application
+- Practice designing and evolving a relational database
+- Understand backend–frontend communication via APIs
+- Apply modern React patterns and UI components
+- Improve confidence working with real-world inspired systems
+- Practice version control and clean project organization
 
-The project was developed with guidance and support, and its primary value lies in the learning process rather than in delivering a production-ready solution.
+The project was developed with guidance and support as part of an active learning process.
 
 ---
 
 ## My contribution
 
-I worked on this project as a personal learning initiative. My contribution included:
+I developed this project as a personal initiative. My work included:
 
-- Designing and iterating on the database structure  
-- Building and refining the application structure  
-- Implementing basic system functionality  
-- Deploying the application for remote testing  
-- Iterating based on feedback and new requirements  
-
-While the project was inspired by a real business context, it was not ultimately adopted due to organizational changes unrelated to the technical solution.
+- Designing and iterating on the database schema
+- Implementing backend APIs and frontend components
+- Integrating authentication and navigation flows
+- Developing reporting functionality
+- Iterating on the system based on feedback and evolving requirements
+- Managing the project codebase and version control
 
 ---
 
 ## Project status
 
-This project is not actively maintained and is not used in production.
+This project is **not in active production use**.
 
-The deployed versions may no longer function correctly due to hosting limitations, but they remain part of the learning journey and experimentation process.
+Development was paused after organizational changes within the company that originally inspired the initiative. The system is currently maintained as a **learning and portfolio artifact**, representing a completed learning cycle based on a real-world scenario.
+
+Deployed demo versions may no longer be available due to hosting limitations.
 
 ---
 
 ## Notes
 
-This repository represents a completed learning cycle based on a real-world scenario and reflects growth through experimentation, iteration, and hands-on practice.
+This repository reflects growth through experimentation, iteration, and hands-on practice, based on a real business-inspired use case.
+
+It is intended to demonstrate system design thinking, full-stack development fundamentals, and the ability to translate operational needs into a technical solution.
