@@ -7,6 +7,63 @@ The system was designed to explore **modern web application architecture** while
 
 ---
 
+## Screenshots
+
+### Login
+![Login](screenshots/login.png)
+
+---
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+---
+
+### Clients Management
+![Clients](screenshots/clients.png)
+
+---
+
+### Projects Management
+![Projects](screenshots/projects.png)
+
+---
+
+### Project Assignments
+![Project Assignments](screenshots/assignments.png)
+
+---
+
+### Personnel Management
+![Personnel](screenshots/personnel.png)
+
+---
+
+### Sales & Proformas
+![Sales](screenshots/sales.png)
+
+---
+
+### Proformas Report
+![Proformas Report](screenshots/reports-proformas.png)
+
+---
+
+### Projects Report
+![Projects Report](screenshots/reports-projects.png)
+
+---
+
+### Sales Report
+![Sales Report](screenshots/reports-sales.png)
+
+---
+
+### Logout
+![Logout](screenshots/logout.png)
+
+---
+
 ## Project background
 
 This project originated from a **direct request by an employee of an elevator services company in Germany**, who identified the need for a centralized system to replace spreadsheet-based operational tracking.
@@ -26,7 +83,7 @@ After that, the project was continued as a **personal learning and portfolio ini
 - Project management
 - Personnel management
 - Project assignments
-- Sales and proforma management
+- Sales and proforma management (proforma invoices / sales quotes)
 - Reporting module (projects, sales, proformas)
 - Modular backend and frontend architecture
 - Responsive user interface using Ant Design
@@ -35,10 +92,21 @@ After that, the project was continued as a **personal learning and portfolio ini
 
 ## Technology stack
 
-- **Backend:** Python, Django, Django REST Framework  
-- **Frontend:** React, Ant Design  
-- **Database:** PostgreSQL  
-- **Version control:** Git, GitHub  
+**Backend**
+- Python
+- Django
+- Django REST Framework
+
+**Frontend**
+- React
+- Ant Design
+
+**Database**
+- PostgreSQL
+
+**Version control**
+- Git
+- GitHub
 
 ---
 
@@ -104,3 +172,4 @@ Deployed demo versions may no longer be available due to hosting limitations.
 This repository reflects growth through experimentation, iteration, and hands-on practice, based on a real business-inspired use case.
 
 It is intended to demonstrate system design thinking, full-stack development fundamentals, and the ability to translate operational needs into a technical solution.
+
