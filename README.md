@@ -7,6 +7,20 @@ The system was designed to explore **modern web application architecture** while
 
 ---
 
+## Overview
+
+The Elevator Management System (EMS) was designed as a learning and portfolio project to explore how a real operational business scenario can be translated into a structured software system.
+
+Rather than focusing only on coding, this project emphasizes:
+- Business process understanding
+- Functional design
+- System organization
+- User-oriented workflows
+
+The application reflects common challenges faced by service-based companies, such as tracking projects, managing personnel, and maintaining operational visibility.
+
+---
+
 ## Screenshots
 
 ### Login
@@ -64,49 +78,50 @@ The system was designed to explore **modern web application architecture** while
 
 ---
 
-## Project background
-
-This project originated from a **direct request by an employee of an elevator services company in Germany**, who identified the need for a centralized system to replace spreadsheet-based operational tracking.
-
-The initial goal was to develop a **process improvement proposal** that could be presented to company management, demonstrating how operational information (clients, projects, personnel, and sales) could be better organized using a database-driven system instead of Excel.
-
-During the development of the proposal, the company underwent a **change of ownership**, and the initiative was discontinued due to organizational restructuring **unrelated to the technical solution**.
-
-After that, the project was continued as a **personal learning and portfolio initiative**, evolving into a more structured and complete full-stack system.
-
----
-
 ## System features
 
-- Authentication and session management (login / logout)
-- Client management
-- Project management
-- Personnel management
-- Project assignments
-- Sales and proforma management (proforma invoices / sales quotes)
-- Reporting module (projects, sales, proformas)
-- Modular backend and frontend architecture
-- Responsive user interface using Ant Design
+- User authentication and role-based access
+- Centralized dashboard with operational overview
+- Client registration and management
+- Project tracking with status control
+- Personnel management and assignment
+- Structured data model designed around real operational needs
 
 ---
 
-## Technology stack
+## Business Problem Addressed
 
-**Backend**
-- Python
-- Django
-- Django REST Framework
+Service-based companies often rely on fragmented tools (spreadsheets, emails, manual tracking) to manage projects and personnel.
 
-**Frontend**
-- React
-- Ant Design
+This project explores how a single system can:
+- Centralize operational data
+- Reduce manual tracking
+- Improve visibility of project status
+- Support decision-making through structured information
 
-**Database**
-- PostgreSQL
+The system design is based on real operational workflows rather than purely academic requirements.
 
-**Version control**
-- Git
-- GitHub
+---
+
+## System Design (High level)
+
+The system follows a simple full-stack architecture:
+- Frontend for user interaction and data visualization
+- Backend API handling business logic and data access
+- Relational database modeling real-world entities and relationships
+
+The focus is on clarity, maintainability, and alignment with business processes rather than advanced optimization.
+
+---
+
+## Tech Stack
+
+- Frontend: React, Ant Design
+- Backend: Django REST Framework
+- Database: PostgreSQL
+- Authentication: Token-based authentication
+- Version control: Git, GitHub
+- Deployment (prototype): Render (free tier)
 
 ---
 
@@ -157,19 +172,23 @@ I developed this project as a personal initiative. My work included:
 
 ---
 
-## Project status
+## Project Status & Limitations
 
-This project is **not in active production use**.
+This project is intended as a portfolio prototype.
 
-Development was paused after organizational changes within the company that originally inspired the initiative. The system is currently maintained as a **learning and portfolio artifact**, representing a completed learning cycle based on a real-world scenario.
+Due to free-tier deployment limitations, the live backend and database may not always be available.
+For this reason, the project is currently showcased using screenshots and documentation.
 
-Deployed demo versions may no longer be available due to hosting limitations.
+The focus of the project is functional design and system structure rather than production readiness.
 
 ---
 
-## Notes
+## Future Improvements
 
-This repository reflects growth through experimentation, iteration, and hands-on practice, based on a real business-inspired use case.
+- Re-enable full deployment with persistent database
+- Complete reporting module
+- Add role-based permissions in more detail
+- Improve dashboards with operational metrics
+- Enhance UX based on user feedback
 
-It is intended to demonstrate system design thinking, full-stack development fundamentals, and the ability to translate operational needs into a technical solution.
 
