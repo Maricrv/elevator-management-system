@@ -1,13 +1,10 @@
 import React, { useEffect } from "react";
-import { Form, Input, Button, Row, Col, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Form, Input, Button, Row, Col } from "antd";
 
-const ClientForm = ({ initialValues = {}, onSubmit }) => {
+const ClientForm = ({ initialValues = {}, onSubmit, onCancel }) => {
   const [form] = Form.useForm();
 
-
   useEffect(() => {
-    // Prefill form with initial values if provided
     form.setFieldsValue(initialValues);
   }, [form, initialValues]);
 
@@ -20,7 +17,7 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
       form={form}
       layout="vertical"
       onFinish={handleFinish}
-      style={{ padding: "16px", background: "#fafafa", borderRadius: "4px" }}
+      style={{ padding: "16px", background: "#fafafa", borderRadius: "8px" }}
     >
       <Row gutter={16}>
         <Col span={12}>
@@ -32,6 +29,7 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
             <Input placeholder="Enter client name" />
           </Form.Item>
         </Col>
+
         <Col span={12}>
           <Form.Item
             label="Abbreviation"
@@ -44,7 +42,7 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
       </Row>
 
       <Row gutter={16}>
-      <Col span={12}>
+        <Col span={12}>
           <Form.Item
             label="Client contact"
             name="client_contact"
@@ -53,6 +51,7 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
             <Input placeholder="Enter client contact" />
           </Form.Item>
         </Col>
+
         <Col span={12}>
           <Form.Item
             label="Email"
@@ -62,11 +61,10 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
             <Input placeholder="Enter email" />
           </Form.Item>
         </Col>
-
       </Row>
 
       <Row gutter={16}>
-      <Col span={12}>
+        <Col span={12}>
           <Form.Item
             label="Phone"
             name="phone"
@@ -78,6 +76,7 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
             <Input placeholder="Enter phone number" />
           </Form.Item>
         </Col>
+
         <Col span={12}>
           <Form.Item
             label="Address"
@@ -90,7 +89,7 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
       </Row>
 
       <Row gutter={16}>
-      <Col span={12}>
+        <Col span={12}>
           <Form.Item
             label="City"
             name="city"
@@ -99,6 +98,7 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
             <Input placeholder="Enter city" />
           </Form.Item>
         </Col>
+
         <Col span={12}>
           <Form.Item
             label="Country"
@@ -109,13 +109,14 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
           </Form.Item>
         </Col>
       </Row>
+
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item
             label="Project Count"
             name="project_count"
-            rules={[{ required: true, type: "number", min: 0, message: "Enter a valid project count" }]}
-            normalize={(value) => (value ? Number(value) : 0)} // Ensures numeric input
+            normalize={(value) => (value === "" || value === null ? 0 : Number(value))}
+            rules={[{ required: true, message: "Enter a valid project count" }]}
           >
             <Input type="number" placeholder="Enter number of projects" />
           </Form.Item>
@@ -127,7 +128,11 @@ const ClientForm = ({ initialValues = {}, onSubmit }) => {
           <Button type="primary" htmlType="submit">
             Save
           </Button>
-          <Button style={{ marginLeft: "8px" }} onClick={() => window.history.back()}>
+
+          <Button
+            style={{ marginLeft: "8px" }}
+            onClick={() => onCancel?.()}
+          >
             Cancel
           </Button>
         </Col>

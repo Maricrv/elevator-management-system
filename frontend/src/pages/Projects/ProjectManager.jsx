@@ -1,18 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Input, Modal, message, Popconfirm, Spin } from "antd";
+import {
+  Table,
+  Button,
+  Input,
+  Modal,
+  message,
+  Popconfirm,
+  Spin,
+  Card,
+  Row,
+  Col,
+  Typography,
+  Space,
+  Tag,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ProjectForm from "./ProjectForm"; // ✅ Ensure this is correctly imported
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+
+const statusColor = (s) => {
+  if (!s) return "default";
+  const v = String(s).toLowerCase();
+  if (v.includes("complete")) return "green";
+  if (v.includes("progress")) return "blue";
+  if (v.includes("plan")) return "gold";
+  if (v.includes("quality")) return "purple";
+  if (v.includes("safety")) return "cyan";
+  return "default";
+};
 
 const ProjectManager = () => {
   const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredProjects, setFilteredProjects] = useState([]);
+
   const navigate = useNavigate();
 
   // Fetch projects from API
@@ -39,9 +68,15 @@ const ProjectManager = () => {
     setFilteredProjects(
       projects.filter(
         (p) =>
-          p.project_id.toLowerCase().includes(lowerCaseQuery) ||
-          p.project_name.toLowerCase().includes(lowerCaseQuery) ||
-          (p.client_name && p.client_name.toLowerCase().includes(lowerCaseQuery))
+          String(p.project_id || "")
+            .toLowerCase()
+            .includes(lowerCaseQuery) ||
+          String(p.project_name || "")
+            .toLowerCase()
+            .includes(lowerCaseQuery) ||
+          String(p.client_name || "")
+            .toLowerCase()
+            .includes(lowerCaseQuery)
       )
     );
   }, [projects, searchQuery]);
@@ -55,7 +90,10 @@ const ProjectManager = () => {
   // Handle save (Update Only)
   const handleSaveProject = async (values) => {
     try {
-      await axios.put(`${API_BASE_URL}/api/projects/${editingProject.project_id}/`, values);
+      await axios.put(
+        `${API_BASE_URL}/api/projects/${editingProject.project_id}/`,
+        values
+      );
       message.success("Project updated successfully!");
       setIsModalVisible(false);
       setEditingProject(null);
@@ -83,53 +121,81 @@ const ProjectManager = () => {
     { title: "Client", dataIndex: "client_name", key: "client_name" },
     { title: "Start Date", dataIndex: "start_date", key: "start_date" },
     { title: "End Date", dataIndex: "end_date", key: "end_date" },
-    { title: "Status", dataIndex: "status_name", key: "status_name" },
+    {
+      title: "Status",
+      dataIndex: "status_name",
+      key: "status_name",
+      render: (s) => <Tag color={statusColor(s)}>{s || "-"}</Tag>,
+    },
     {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <>
-          <Button type="link" onClick={() => navigate(`/projects/${record.project_id}`)}>
+        <Space>
+          <Button
+            type="link"
+            onClick={() => navigate(`/projects/${record.project_id}`)}
+          >
             Details
           </Button>
           <Button type="link" onClick={() => handleEditProject(record)}>
             Edit
           </Button>
-          <Popconfirm title="Delete this project?" onConfirm={() => handleDeleteProject(record.project_id)} okText="Yes" cancelText="No">
-            <Button type="link" danger>Delete</Button>
+          <Popconfirm
+            title="Delete this project?"
+            onConfirm={() => handleDeleteProject(record.project_id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="link" danger>
+              Delete
+            </Button>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];
 
   return (
-    <div className="page-container" style={{ padding: "16px" }}>
-      <h1>Project Manager</h1>
+    <div className="page-container" style={{ maxWidth: 1200, margin: "0 auto" }}>
+      {/* Header */}
+      <Row justify="space-between" align="middle" style={{ marginBottom: 12 }}>
+        <Col>
+          <Typography.Title level={2} style={{ margin: 0 }}>
+            Project Manager
+          </Typography.Title>
+          <Typography.Text type="secondary">
+            Manage projects and view details
+          </Typography.Text>
+        </Col>
 
-      {/* Search Field Only (No Add Button) */}
-      <div style={{ display: "flex", justifyContent: "start", marginBottom: "16px" }}>
-        <Input.Search
-          placeholder="Search by Project or Client"
-          allowClear
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ width: "300px" }}
-        />
-      </div>
+        <Col>
+          <Input.Search
+            placeholder="Search by Project or Client"
+            allowClear
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ width: 320 }}
+          />
+        </Col>
+      </Row>
 
       {/* Table Display */}
-      {loading ? (
-        <Spin />
-      ) : (
-        <Table
-          columns={columns}
-          dataSource={filteredProjects}
-          rowKey="project_id"
-          pagination={{ pageSize: 8 }}
-          bordered
-        />
-      )}
+      <Card className="table-card">
+        {loading ? (
+          <div style={{ display: "flex", justifyContent: "center", padding: 24 }}>
+            <Spin />
+          </div>
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={filteredProjects}
+            rowKey="project_id"
+            pagination={{ pageSize: 8, showSizeChanger: true }}
+            loading={loading}
+          />
+        )}
+      </Card>
 
       {/* Edit Modal */}
       <Modal
@@ -141,7 +207,10 @@ const ProjectManager = () => {
         }}
         footer={null}
       >
-        <ProjectForm initialValues={editingProject || {}} onSubmit={handleSaveProject} />
+        <ProjectForm
+          initialValues={editingProject || {}}
+          onSubmit={handleSaveProject}
+        />
       </Modal>
     </div>
   );

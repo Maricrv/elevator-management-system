@@ -30,6 +30,13 @@ __pycache__/
 .env
 *.sqlite3
 /migrations/
+# Django media uploads
+media/
+backend/media/
+**/media/
+
+*.pdf
+
 
 # Node.js (Frontend)
 node_modules/
@@ -38,3 +45,5 @@ build/
 # Virtual Environment
 venv/
 klst/
+
+

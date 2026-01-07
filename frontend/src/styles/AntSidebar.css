@@ -10,20 +10,20 @@
   --sider-width: 220px;
   --sider-collapsed-width: 80px;
   --border-color: #cfd8e3;
-  --shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow: 2px 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* ----------------------------------- */
 /* Sidebar (Sider) Customization       */
 /* ----------------------------------- */
 
-/* General Sidebar Styling */
+/* ✅ Sidebar fixed */
 .ant-layout-sider {
   position: fixed;
-  top: 0;
+  top: 64px;               /* ✅ Start under navbar */
   left: 0;
   bottom: 0;
-  height: 100vh;
+  height: calc(100vh - 64px);
   width: var(--sider-width);
   background: linear-gradient(135deg, var(--light-corporate-blue), #dde3ec);
   z-index: 10;
@@ -32,7 +32,7 @@
   box-shadow: var(--shadow);
 }
 
-/* Adjusted Sidebar for Navbar */
+/* If you use className="custom-sider" keep it clean */
 .custom-sider {
   top: 64px;
   height: calc(100vh - 64px);
@@ -43,22 +43,10 @@
   width: var(--sider-collapsed-width) !important;
 }
 
-/* Sidebar Content Margin */
-.content-expanded {
-  margin-left: var(--sider-width);
-  transition: margin-left 0.3s ease;
-}
-
-.content-collapsed {
-  margin-left: var(--sider-collapsed-width);
-  transition: margin-left 0.3s ease;
-}
-
 /* ----------------------------------- */
 /* Sidebar Menu Styling                */
 /* ----------------------------------- */
 
-/* General Menu Styles */
 .ant-menu-light {
   background: transparent;
 }
@@ -67,28 +55,29 @@
 .ant-menu-light .ant-menu-item {
   display: flex;
   align-items: center;
-  border-radius: 6px;
-  transition: background 0.3s ease, color 0.3s ease;
+  border-radius: 8px; /* ✅ slightly more modern */
+  transition: background 0.2s ease, color 0.2s ease;
+  margin: 4px 8px; /* ✅ gives spacing */
 }
 
-/* Menu Item Hover Effect */
+/* Hover */
 .ant-menu-light .ant-menu-item:hover {
   background: var(--hover-background);
 }
 
-/* Selected Menu Item */
+/* Selected */
 .ant-menu-item-selected,
 .ant-menu-submenu .ant-menu-item-selected {
   background: var(--selected-background) !important;
-  border-radius: 6px !important;
+  border-radius: 8px !important;
 }
 
-/* Sidebar Icons and Text */
+/* Icons and Text */
 .ant-menu-item .anticon,
 .ant-menu-submenu-title .anticon {
   font-size: 18px;
   color: var(--corporate-blue-gray) !important;
-  transition: color 0.3s ease !important;
+  transition: color 0.2s ease !important;
 }
 
 .ant-menu-item span,
@@ -97,10 +86,10 @@
 .ant-menu-submenu-selected span {
   font-size: 15px !important;
   color: var(--corporate-blue-gray) !important;
-  transition: color 0.3s ease !important;
+  transition: color 0.2s ease !important;
 }
 
-/* Hover and Selected States for Icons and Text */
+/* Hover + Selected color */
 .ant-menu-item:hover .anticon,
 .ant-menu-submenu-title:hover .anticon,
 .ant-menu-item:hover span,
@@ -119,35 +108,35 @@
 /* Submenu Styling                     */
 /* ----------------------------------- */
 
-/* General Submenu Title Styling */
 .ant-menu-submenu-title {
   color: var(--corporate-blue-gray) !important;
+  border-radius: 8px;
+  margin: 4px 8px;
 }
 
-/* Submenu Title Hover and Selected States */
 .ant-menu-submenu-title:hover,
 .ant-menu-submenu-selected > .ant-menu-submenu-title {
   color: var(--corporate-blue) !important;
- 
   background: var(--hover-background);
-  border-radius: 6px !important;
+  border-radius: 8px !important;
 }
 
-/* Submenu Items Styling */
+/* Submenu Items */
 .ant-menu-submenu .ant-menu-item {
   color: var(--corporate-blue-gray) !important;
   background: transparent !important;
-  transition: color 0.3s ease, background 0.3s ease;
+  transition: color 0.2s ease, background 0.2s ease;
+  margin: 4px 8px;
+  border-radius: 8px;
 }
 
-/* Submenu Items Hover and Selected States */
 .ant-menu-submenu .ant-menu-item:hover,
 .ant-menu-submenu .ant-menu-item-selected {
   color: var(--corporate-blue) !important;
   background: var(--selected-background) !important;
 }
 
-/* Submenu Arrow Styling */
+/* Arrow */
 .ant-menu-submenu-arrow {
   color: var(--corporate-blue-gray) !important;
 }
@@ -161,20 +150,17 @@
 /* Collapsed Submenu Styling           */
 /* ----------------------------------- */
 
-/* Ensure submenu parent items remain visible when sidebar is collapsed */
 .ant-menu-inline-collapsed .ant-menu-submenu {
   position: relative;
   overflow: visible !important;
 }
 
-/* Keep submenu icons visible when collapsed */
 .ant-menu-inline-collapsed .ant-menu-submenu-title .anticon {
   font-size: 20px;
   color: var(--corporate-blue);
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
 }
 
-/* Display submenu items as a floating dropdown when collapsed */
 .ant-menu-inline-collapsed .ant-menu-submenu:hover .ant-menu {
   display: block !important;
   position: absolute !important;
@@ -183,15 +169,11 @@
   min-width: 220px !important;
   background: #ffffff !important;
   padding: 8px 0 !important;
-  border-radius: 6px !important;
+  border-radius: 10px !important;
   box-shadow: var(--shadow);
   z-index: 1000 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  transition: opacity 0.1s ease-in-out, visibility 0.1s ease-in-out;
 }
 
-/* Ensure submenu text is visible in collapsed mode */
 .ant-menu-inline-collapsed .ant-menu-submenu:hover .ant-menu-item {
   color: var(--corporate-blue-gray) !important;
   font-size: 14px !important;
@@ -202,73 +184,59 @@
   display: block !important;
 }
 
-/* Hover effect for submenu items in collapsed mode */
 .ant-menu-inline-collapsed .ant-menu-submenu:hover .ant-menu-item:hover {
   background: var(--hover-background) !important;
   color: var(--corporate-blue) !important;
 }
 
 /* ----------------------------------- */
-/* Content Styling Related to Sidebar  */
+/* ✅ IMPORTANT: DO NOT FORCE CONTENT   */
 /* ----------------------------------- */
-
-/* General Content Styling */
+/*
+  This is the key to avoid the big white block.
+  Your pages already have .page-container / .dashboard-container backgrounds.
+*/
 .ant-layout-content {
-  margin-left: var(--sider-width);
-  padding: 16px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  transition: margin-left 0.3s ease;
-}
-
-/* Adjust Content Margin for Collapsed Sidebar */
-.ant-layout-sider-collapsed + .ant-layout-content {
-  margin-left: var(--sider-collapsed-width);
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important; /* App.jsx Content already has padding */
+  margin: 0 !important;
 }
 
 /* ----------------------------------- */
-/* Sidebar Trigger Button Customization */
+/* Sidebar Trigger Button              */
 /* ----------------------------------- */
-
-/* Trigger Button (Collapsed and Expanded Sidebar) */
 
 .ant-layout-sider-trigger {
-  background: var(--selected-background) !important; /* Match selected item */
-  color: var(--corporate-blue-gray) !important; /* Corporate blue-gray */
-  border-top: 1px solid rgba(255, 255, 255, 0.2); /* Subtle top border */
-  transition: background 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.2s ease;
+  background: var(--selected-background) !important;
+  color: var(--corporate-blue-gray) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease;
 }
 
-/* Sidebar Trigger Button Hover */
 .ant-layout-sider-trigger:hover {
-  background: var(--hover-background) !important; /* Match menu hover */
-  color: var(--corporate-blue) !important; /* Corporate blue for better visibility */
-  transform: scale(1.03); /* Soft hover effect */
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08); /* Soft depth */
+  background: var(--hover-background) !important;
+  color: var(--corporate-blue) !important;
+  transform: scale(1.03);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08);
 }
 
-/* Fix tooltip styling */
+/* Tooltip */
 .ant-tooltip-inner {
-  background: var(--selected-background) !important; /* Match sidebar */
-  color: var(--corporate-blue-gray) !important; /* Ensure contrast */
+  background: var(--selected-background) !important;
+  color: var(--corporate-blue-gray) !important;
   font-size: 14px !important;
-  border-radius: 4px !important;
+  border-radius: 6px !important;
 }
 
-/* Fix tooltip arrow */
 .ant-tooltip-arrow {
   border-color: var(--corporate-blue-gray) !important;
 }
 
-
-
-
-/* ----------------------------------- */
-/* Additional Fixes for Consistency    */
-/* ----------------------------------- */
-
-/* Remove underline from all sidebar links */
+/* Remove underline from sidebar links */
 .ant-menu a {
   text-decoration: none;
 }
+
+

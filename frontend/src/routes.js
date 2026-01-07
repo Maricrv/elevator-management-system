@@ -11,7 +11,10 @@ import InventoryTransactions from "./pages/Inventory/InventoryTransactions";
 import MaintenanceRequests from "./pages/Maintenance/MaintenanceRequests";
 import MaintenanceLogs from "./pages/Maintenance/MaintenanceLogs";
 import Configurations from "./pages/Configurations/Configurations";
-import Reports from "./pages/Reports/Reports";
+
+import ProjectsReport from "./pages/Reports/ProjectsReport";
+import ProformasReports from "./pages/Reports/ProformasReports";
+import SalesReport from "./pages/Reports/SalesReport";
 import Personnel from "./pages/Personnel/Personnel";
 import NotFound from "./pages/NotFound/NotFound";
 
@@ -29,7 +32,9 @@ const AppRoutes = () => {
       <Route path="/maintenance/requests" element={<MaintenanceRequests />} />
       <Route path="/maintenance/logs" element={<MaintenanceLogs />} />
       <Route path="/configurations" element={<Configurations />} />
-      <Route path="/reports" element={<Reports />} />
+      <Route path="/reports/projectsreport" element={<ProjectsReport />} />
+      <Route path="/reports/proformasreports" element={<ProformasReports />} />
+      <Route path="/reports/salesreport" element={<SalesReport />} />
       <Route path="/personnel" element={<Personnel />} />
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Navigate to="/dashboard" />} />

@@ -1,18 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Input, Modal, message, Popconfirm, Spin } from "antd";
+import {
+  Table,
+  Button,
+  Input,
+  Modal,
+  message,
+  Popconfirm,
+  Spin,
+  Card,
+  Row,
+  Col,
+  Typography,
+  Space,
+  Tag,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SaleForm from "./SaleForm";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+
+const paidTag = (paid) =>
+  paid ? <Tag color="green">Paid</Tag> : <Tag color="gold">Unpaid</Tag>;
 
 const SalesManager = () => {
   const [sales, setSales] = useState([]);
+  const [filteredSales, setFilteredSales] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingSale, setEditingSale] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredSales, setFilteredSales] = useState([]);
+
   const navigate = useNavigate();
 
   // Fetch sales from API
@@ -20,8 +40,9 @@ const SalesManager = () => {
     setLoading(true);
     try {
       const response = await axios.get(`${API_BASE_URL}/api/sales/`);
-      setSales(response.data.results || response.data);
-      setFilteredSales(response.data.results || response.data);
+      const list = response.data?.results || response.data || [];
+      setSales(list);
+      setFilteredSales(list);
     } catch (error) {
       message.error("Failed to fetch sales.");
     } finally {
@@ -36,20 +57,21 @@ const SalesManager = () => {
 
   // Update filteredSales based on searchQuery
   useEffect(() => {
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    const filtered = sales.filter(
-      (s) =>
-        (s.project_name?.toLowerCase() || "").includes(lowerCaseQuery) || 
-        (s.client_name?.toLowerCase() || "").includes(lowerCaseQuery)
+    const q = searchQuery.toLowerCase();
+    setFilteredSales(
+      sales.filter(
+        (s) =>
+          String(s.project_name || "").toLowerCase().includes(q) ||
+          String(s.client_name || "").toLowerCase().includes(q)
+      )
     );
-    setFilteredSales(filtered);
   }, [sales, searchQuery]);
 
   // Handle sale deletion
   const handleDeleteSale = async (saleId) => {
     try {
       await axios.delete(`${API_BASE_URL}/api/sales/${saleId}/`);
-      setSales((prevSales) => prevSales.filter((s) => s.sale_id !== saleId));
+      setSales((prev) => prev.filter((s) => s.sale_id !== saleId));
       message.success("Sale deleted successfully!");
     } catch (error) {
       message.error("Failed to delete sale.");
@@ -58,12 +80,12 @@ const SalesManager = () => {
 
   const handleSaveSale = async (values) => {
     try {
-      await axios.put(`${API_BASE_URL}/api/sales/${editingSale.sale_id}/`, values);
+      await axios.put(
+        `${API_BASE_URL}/api/sales/${editingSale.sale_id}/`,
+        values
+      );
       message.success("Sale updated successfully!");
-
-      // Refresh sales list
       await fetchSales();
-
       setIsModalVisible(false);
       setEditingSale(null);
     } catch (error) {
@@ -79,25 +101,34 @@ const SalesManager = () => {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      render: (amount) => `$${Number(amount || 0).toFixed(2)}`,
+      align: "right",
+      render: (amount) =>
+        `$${Number(amount || 0).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`,
     },
     {
       title: "Payment Status",
       dataIndex: "paid",
       key: "paid",
-      render: (paid) => (paid ? "Paid" : "Unpaid"),
+      render: (paid) => paidTag(paid),
     },
     {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <>
-          <Button type="link" onClick={() => navigate(`/sales/${record.sale_id}`)}>
-            Details
-          </Button>
+        <Space>
           <Button
             type="link"
-            disabled={record.paid} // 🔹 Disable editing if the sale is already paid
+            onClick={() => navigate(`/sales/${record.sale_id}`)}
+          >
+            Details
+          </Button>
+
+          <Button
+            type="link"
+            disabled={record.paid} // disable editing if already paid
             onClick={() => {
               setEditingSale(record);
               setIsModalVisible(true);
@@ -105,8 +136,9 @@ const SalesManager = () => {
           >
             Edit
           </Button>
+
           <Popconfirm
-            title="Are you sure you want to delete this sale?"
+            title="Delete this sale?"
             onConfirm={() => handleDeleteSale(record.sale_id)}
             okText="Yes"
             cancelText="No"
@@ -115,40 +147,59 @@ const SalesManager = () => {
               Delete
             </Button>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];
 
   return (
-    <div className="page-container" style={{ padding: "16px" }}>
-      <h1>Sales Manager</h1>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
-        <Input.Search
-          placeholder="Search by Project Name or Client Name"
-          allowClear
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ width: "300px" }}
-        />
-      </div>
+    <div className="page-container" style={{ maxWidth: 1200, margin: "0 auto" }}>
+      {/* Header */}
+      <Row justify="space-between" align="middle" style={{ marginBottom: 12 }}>
+        <Col>
+          <Typography.Title level={2} style={{ margin: 0 }}>
+            Sales Manager
+          </Typography.Title>
+          <Typography.Text type="secondary">
+            Manage sales and payment status
+          </Typography.Text>
+        </Col>
 
-      {loading ? (
-        <Spin />
-      ) : (
-        <Table
-          columns={columns}
-          dataSource={filteredSales}
-          rowKey="sale_id"
-          pagination={{ pageSize: 8 }}
-          bordered
-        />
-      )}
+        <Col>
+          <Input.Search
+            placeholder="Search by Project or Client"
+            allowClear
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ width: 300 }}
+          />
+        </Col>
+      </Row>
 
+      {/* Table */}
+      <Card className="table-card">
+        {loading ? (
+          <div style={{ display: "flex", justifyContent: "center", padding: 24 }}>
+            <Spin />
+          </div>
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={filteredSales}
+            rowKey="sale_id"
+            pagination={{ pageSize: 8, showSizeChanger: true }}
+          />
+        )}
+      </Card>
+
+      {/* Edit Modal */}
       <Modal
         title="Edit Sale"
         open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={() => {
+          setIsModalVisible(false);
+          setEditingSale(null);
+        }}
         footer={null}
       >
         <SaleForm initialValues={editingSale} onSubmit={handleSaveSale} />

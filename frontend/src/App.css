@@ -1,25 +1,39 @@
+/* App.css (STANDARDIZED + FIXED LAYOUT) */
+
 /* ----------------------------------- */
-/* Global Styles for Body and Layout  */
+/* Global Styles for Body and Layout   */
 /* ----------------------------------- */
+
+html,
+body,
+#root {
+  height: 100%;
+}
 
 body {
   margin: 0;
   font-family: "Inter", "Roboto", "Segoe UI", sans-serif !important;
   font-size: 16px;
   font-weight: 400;
-  background: linear-gradient(135deg, #e9eff6, #d3dbe5); /* Softer corporate gradient */
+
+  /* ✅ Modern apps usually use a neutral background across the whole app */
+  background: #f4f6f8;
+
   overflow-x: hidden;
 }
 
 /* Standardizing Headings */
-/* Standardizing Headings */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "Inter", sans-serif !important;
   font-weight: 700;
   color: #162d50 !important; /* Darker corporate blue */
-  margin-bottom: 12px; /* More breathing space */
+  margin-bottom: 12px;
 }
-
 
 /* Standardize Ant Design Components */
 .ant-menu,
@@ -31,42 +45,45 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ----------------------------------- */
-/* Button and Link Customization */
+/* Ant Design Buttons (Standardized)   */
 /* ----------------------------------- */
 
-/* Standardizing Buttons */
-button, .ant-btn {
-  font-family: "Inter", sans-serif !important;
+/* Keep Ant buttons consistent */
+.ant-btn {
+  border-radius: 10px;
+  font-weight: 600;
 }
 
-/* Modern Corporate Button */
-.fixed-button {
-  width: 150px !important;
-  height: 50px !important;
-  font-size: 16px;
-  padding: 10px 0;
-  text-align: center;
-  white-space: nowrap;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #2d7dd2; /* Polished corporate blue */
-  color: white;
-  border: none;
-  border-radius: 8px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+/* Primary buttons (Add / Save / etc.) */
+.ant-btn-primary {
+  background: #2d7dd2 !important;
+  border-color: #2d7dd2 !important;
+  font-weight: 700;
+  border-radius: 10px;
 }
 
-.fixed-button:hover {
-  background-color: #2467b0; /* Slightly deeper hover effect */
-  transform: translateY(-2px);
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background: #2467b0 !important;
+  border-color: #2467b0 !important;
 }
 
+/* Link buttons (Details / Edit) keep default, just slightly stronger */
+.ant-btn-link {
+  font-weight: 600;
+}
 
+/* Danger link (Delete) */
+.ant-btn-link.ant-btn-dangerous {
+  font-weight: 700;
+}
 
-/* Registration Link */
+/* ----------------------------------- */
+/* Registration Link                   */
+/* ----------------------------------- */
+
 .register-link {
-  color: #2d7dd2; /* Modern corporate blue */
+  color: #2d7dd2;
   font-weight: 500;
   text-decoration: none;
   transition: color 0.3s ease;
@@ -77,7 +94,7 @@ button, .ant-btn {
 }
 
 /* ----------------------------------- */
-/* Login Page Customization */
+/* Login Page Customization            */
 /* ----------------------------------- */
 
 .login-page-container {
@@ -86,14 +103,19 @@ button, .ant-btn {
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  background: linear-gradient(135deg, #e9eff6, #d3dbe5); /* Refined, professional look */
+
+  /* ✅ Keep gradient only on login page if you like */
+  background: linear-gradient(135deg, #e9eff6, #d3dbe5);
 }
 
 .login-card {
   max-width: 900px;
   width: 100%;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08); /* Softer, more elegant shadow */
+
+  /* ✅ Standardized radius */
+  border-radius: 14px;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   background: #ffffff;
   padding: 40px;
 }
@@ -114,72 +136,90 @@ button, .ant-btn {
 }
 
 /* ----------------------------------- */
-/* Navbar Styles */
-/* ----------------------------------- */
-
-
-/* ----------------------------------- */
-/* Spinner Animation */
+/* Spinner Animation                    */
 /* ----------------------------------- */
 
 .spinner {
   animation: spin 1s linear infinite;
   font-size: 18px;
-  color: #2d7dd2; /* Consistent blue for loading */
+  color: #2d7dd2;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
+/* ----------------------------------- */
+/* Page + Dashboard Layout (IMPORTANT) */
+/* ----------------------------------- */
 
-
-/* src/pages/Dashboard/Dashboard.css */
+/*
+  ✅ Avoid min-height:100vh inside content because you already have a fixed navbar (64px)
+  This prevents the “big blank space” feeling.
+*/
+.page-container,
 .dashboard-container {
   padding: 20px;
-  background-color: #f4f6f8;
-  min-height: 100vh;
-  
+  background: #f4f6f8;
+  min-height: calc(100vh - 64px); /* navbar height */
 }
 
-.page-container {
-  min-height: 100vh;
-  padding: 20px;
-  background:  #f4f6f8; /* Refined, professional look */
+/* ----------------------------------- */
+/* Dashboard Cards                      */
+/* ----------------------------------- */
+
+.summary-card,
+.chart-card,
+.table-card {
+  border-radius: 14px; /* ✅ unified */
 }
+
+/* Smooth hover */
 .summary-card {
-  border-radius: 10px;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.25s ease-in-out;
   font-weight: 500;
-  
 }
 
 .summary-card:hover {
-  transform: scale(1.05);
-  background-color:rgba(55, 125, 220, 0.15); 
-  color: #2d7dd2
+  transform: translateY(-2px);
+  background-color: rgba(55, 125, 220, 0.12);
 }
 
-/* Remove underline and make links look clean */
+/* Link cards (FIXED HOVER SELECTOR) */
 .link-card {
   text-decoration: none !important;
   border-bottom: none !important;
   font-weight: bold;
-  display: block; /* Ensures it covers the entire card */
-  
+  display: block;
 }
 
-/* Ensure no underline on hover */
-.link-card :hover {
-  color: #2d7dd2; /* Optional: Change color on hover */
+.link-card:hover {
   text-decoration: none !important;
-  border-bottom: none !important;
 }
 
-.chart-card, .table-card {
-  border-radius: 10px;
+/* Optional: if you want titles inside cards to turn blue on hover */
+.link-card:hover .ant-statistic-title,
+.link-card:hover .ant-statistic-content {
+  color: #2d7dd2 !important;
 }
+
+/* ----------------------------------- */
+/* Tables (Optional nice touch)        */
+/* ----------------------------------- */
+
+.ant-table {
+  border-radius: 14px;
+  overflow: hidden; /* keeps rounded corners clean */
+}
+
+/* ----------------------------------- */
+/* Loading Spinner Wrapper             */
+/* ----------------------------------- */
 
 .loading-spinner {
   display: flex;

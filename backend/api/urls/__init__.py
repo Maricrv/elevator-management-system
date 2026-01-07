@@ -15,5 +15,7 @@ urlpatterns = [
     path("project-assignments/", include("api.urls.projectassignments_urls")),
     path("area-statuses/", include("api.urls.areastatus_urls")),
     path("proformas/", include("api.urls.proformas_urls")),
+    path("reports/", include("api.urls.reports_urls")),
+    
 ]
 

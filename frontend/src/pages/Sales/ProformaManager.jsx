@@ -1,19 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Input, Modal, Form, message, Popconfirm, Spin } from "antd";
+import {
+  Table,
+  Button,
+  Input,
+  Modal,
+  Form,
+  message,
+  Popconfirm,
+  Spin,
+  Card,
+  Row,
+  Col,
+  Typography,
+  Space,
+  Tag,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ProformaForm from "./ProformaForm";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+
+const statusColor = (s) => {
+  if (!s) return "default";
+  const v = String(s).toLowerCase();
+  if (v.includes("pending")) return "gold";
+  if (v.includes("accepted")) return "green";
+  if (v.includes("rejected")) return "red";
+  return "blue";
+};
 
 const ProformaManager = () => {
   const [proformas, setProformas] = useState([]);
+  const [filteredProformas, setFilteredProformas] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingProforma, setEditingProforma] = useState(null);
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredProformas, setFilteredProformas] = useState([]);
   const [form] = Form.useForm();
+
   const navigate = useNavigate();
 
   // Fetch proformas from the API
@@ -22,7 +50,7 @@ const ProformaManager = () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/api/proformas/`);
       setProformas(response.data);
-      setFilteredProformas(response.data); // Set filtered list initially
+      setFilteredProformas(response.data);
     } catch (error) {
       message.error("Failed to fetch proformas.");
     } finally {
@@ -37,13 +65,14 @@ const ProformaManager = () => {
 
   // Update filteredProformas based on searchQuery
   useEffect(() => {
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    const filtered = proformas.filter(
-      (p) =>
-        (p.project_name?.toLowerCase() || "").includes(lowerCaseQuery) || // Search by Project Name
-        (p.client_name?.toLowerCase() || "").includes(lowerCaseQuery)    // Search by Client Name
+    const q = searchQuery.toLowerCase();
+    setFilteredProformas(
+      proformas.filter(
+        (p) =>
+          String(p.project_name || "").toLowerCase().includes(q) ||
+          String(p.client_name || "").toLowerCase().includes(q)
+      )
     );
-    setFilteredProformas(filtered);
   }, [proformas, searchQuery]);
 
   const handleSaveProforma = async (values) => {
@@ -61,25 +90,19 @@ const ProformaManager = () => {
         formData.append("technical_details_pdf", values.technical_details_pdf);
       }
 
-      let response;
       if (editingProforma) {
-        response = await axios.put(
+        await axios.put(
           `${API_BASE_URL}/api/proformas/${editingProforma.proforma_id}/`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
       } else {
-        response = await axios.post(
-          `${API_BASE_URL}/api/proformas/`,
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
+        await axios.post(`${API_BASE_URL}/api/proformas/`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       }
 
-
       message.success("Proforma saved successfully!");
-       
-      // ✅ Refresh proformas list from backend to reflect changes
       await fetchProformas();
 
       setIsModalVisible(false);
@@ -108,24 +131,14 @@ const ProformaManager = () => {
       title: "Total Amount",
       dataIndex: "total_amount",
       key: "total_amount",
-      render: (amount) => `$${Number(amount || 0).toFixed(2)}`,
+      align: "right",
+      render: (amount) => `$${Number(amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (status) => {
-        const statusColors = {
-          Pending: "orange",
-          Accepted: "green",
-          Rejected: "red",
-        };
-        return (
-          <span style={{ color: statusColors[status] || "blue", fontWeight: "bold" }}>
-            {status}
-          </span>
-        );
-      },
+      render: (s) => <Tag color={statusColor(s)}>{s || "-"}</Tag>,
     },
     {
       title: "Technical Details (PDF)",
@@ -133,19 +146,28 @@ const ProformaManager = () => {
       key: "technical_details_pdf",
       render: (pdf) =>
         pdf ? (
-          <a href={`${API_BASE_URL}${pdf}`} target="_blank" rel="noopener noreferrer">
+          <a
+            href={`${API_BASE_URL}${pdf}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             View PDF
           </a>
         ) : (
-          "No File"
+          <span style={{ color: "#999" }}>No File</span>
         ),
     },
     {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <>
-          <Button type="link" onClick={() => navigate(`/sales/proformadetails/${record.proforma_id}`)}>
+        <Space>
+          <Button
+            type="link"
+            onClick={() =>
+              navigate(`/sales/proformadetails/${record.proforma_id}`)
+            }
+          >
             Details
           </Button>
           <Button
@@ -153,12 +175,13 @@ const ProformaManager = () => {
             onClick={() => {
               setEditingProforma(record);
               setIsModalVisible(true);
+              setTimeout(() => form.resetFields(), 0);
             }}
           >
             Edit
           </Button>
           <Popconfirm
-            title="Are you sure?"
+            title="Delete this proforma?"
             onConfirm={() => handleDeleteProforma(record.proforma_id)}
             okText="Yes"
             cancelText="No"
@@ -167,57 +190,78 @@ const ProformaManager = () => {
               Delete
             </Button>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];
 
   return (
-    <div className="page-container" style={{ padding: "16px" }}>
-      <h1>Proforma Manager</h1>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
-        <Input.Search
-          placeholder="Search by Project Name or Client Name"
-          allowClear
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ width: "300px" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => {
-            setEditingProforma(null);
-            setIsModalVisible(true);
-                
-            // ✅ Ensure the form resets properly on the next tick
-            setTimeout(() => {
-              form.resetFields();
-            }, 100);
-          }}
-        >
-          Add Proforma
-        </Button>
-      </div>
+    <div className="page-container" style={{ maxWidth: 1200, margin: "0 auto" }}>
+      {/* Header */}
+      <Row justify="space-between" align="middle" style={{ marginBottom: 12 }}>
+        <Col>
+          <Typography.Title level={2} style={{ margin: 0 }}>
+            Proforma Manager
+          </Typography.Title>
+          <Typography.Text type="secondary">
+            Create, update, and manage proformas
+          </Typography.Text>
+        </Col>
 
-      {loading ? (
-        <Spin />
-      ) : (
-        <Table
-          columns={columns}
-          dataSource={filteredProformas}
-          rowKey="proforma_id"
-          pagination={{ pageSize: 8 }}
-          bordered
-        />
-      )}
+        <Col>
+          <Space>
+            <Input.Search
+              placeholder="Search by Project or Client"
+              allowClear
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ width: 300 }}
+            />
+            <Button
+              type="primary"
+              onClick={() => {
+                setEditingProforma(null);
+                setIsModalVisible(true);
+                setTimeout(() => form.resetFields(), 0);
+              }}
+            >
+              Add Proforma
+            </Button>
+          </Space>
+        </Col>
+      </Row>
 
+      {/* Table */}
+      <Card className="table-card">
+        {loading ? (
+          <div style={{ display: "flex", justifyContent: "center", padding: 24 }}>
+            <Spin />
+          </div>
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={filteredProformas}
+            rowKey="proforma_id"
+            pagination={{ pageSize: 8, showSizeChanger: true }}
+          />
+        )}
+      </Card>
+
+      {/* Modal */}
       <Modal
         title={editingProforma ? "Edit Proforma" : "Add Proforma"}
         open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={() => {
+          setIsModalVisible(false);
+          setEditingProforma(null);
+        }}
         footer={null}
       >
-        <ProformaForm form={form} initialValues={editingProforma} onSubmit={handleSaveProforma} />
+        <ProformaForm
+          form={form}
+          initialValues={editingProforma}
+          onSubmit={handleSaveProforma}
+        />
       </Modal>
     </div>
   );

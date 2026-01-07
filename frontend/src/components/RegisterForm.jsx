@@ -1,183 +1,153 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { Card, Form, Input, Button, Select, Typography, Space, message } from "antd";
+import { UserOutlined, MailOutlined, LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import { register } from "../services/authService";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { FaSpinner } from "react-icons/fa";
+
+const { Title, Text } = Typography;
 
 const RegisterForm = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: "Technician",
-  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (values) => {
+    const { username, email, password, confirmPassword, role } = values;
 
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match. Please try again.");
+    if (password !== confirmPassword) {
+      message.error("Passwords do not match.");
       return;
     }
 
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
-      await register({
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-        role: formData.role,
-      });
+      await register({ username, email, password, role });
+      message.success("Registration successful! Redirecting...");
 
-      toast.success("Registration successful! Redirecting...");
-      setTimeout(() => navigate("/"), 2000); // Redirect after success
+      setTimeout(() => navigate("/"), 1200);
     } catch (error) {
-      toast.error("Registration failed: " + (error.response?.data?.message || "Unknown error"));
+      message.error(
+        "Registration failed: " +
+          (error?.response?.data?.message ||
+            error?.response?.data?.error ||
+            "Unknown error")
+      );
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
   return (
-    <div style={styles.container}>
-      <ToastContainer /> {/* Toast notifications container */}
-      
-      <form onSubmit={handleSubmit} style={styles.form}>
-        {/* Logo */}
-        <div style={styles.logoContainer}>
-          <img src="/img1 logo.jpg" alt="Logo" style={styles.logo} />
-        </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 24,
+      }}
+      className="login-page-container"
+    >
+      <Card
+        style={{
+          width: "100%",
+          maxWidth: 520,
+          borderRadius: 14,
+          boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+        }}
+        bodyStyle={{ padding: 28 }}
+      >
+        <Space direction="vertical" size={12} style={{ width: "100%" }} align="center">
+          {/* Logo */}
+          <img
+            src="/img1 logo.jpg"
+            alt="ElevatorSys Logo"
+            style={{ height: 64, objectFit: "contain" }}
+          />
 
-        <h2 style={styles.header}>Create an Account</h2>
+          <Title level={3} style={{ margin: 0, color: "#162d50" }}>
+            Create an Account
+          </Title>
 
-        {/* Username Input */}
-        <input
-          type="text"
-          placeholder="Username"
-          style={styles.input}
-          value={formData.username}
-          onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-          required
-        />
+          <Text type="secondary" style={{ textAlign: "center" }}>
+            Register to access the ElevatorSys dashboard
+          </Text>
+        </Space>
 
-        {/* Email Input */}
-        <input
-          type="email"
-          placeholder="Email"
-          style={styles.input}
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          required
-        />
+        <div style={{ height: 18 }} />
 
-        {/* Password Input */}
-        <input
-          type="password"
-          placeholder="Password"
-          style={styles.input}
-          value={formData.password}
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          required
-        />
+        <Form layout="vertical" onFinish={handleSubmit} initialValues={{ role: "Technician" }}>
+          <Form.Item
+            label="Username"
+            name="username"
+            rules={[
+              { required: true, message: "Please enter a username" },
+              { min: 3, message: "Username must be at least 3 characters" },
+            ]}
+          >
+            <Input size="large" prefix={<UserOutlined />} placeholder="Username" />
+          </Form.Item>
 
-        {/* Confirm Password Input */}
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          style={styles.input}
-          value={formData.confirmPassword}
-          onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-          required
-        />
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: "Please enter an email" },
+              { type: "email", message: "Please enter a valid email" },
+            ]}
+          >
+            <Input size="large" prefix={<MailOutlined />} placeholder="Email" />
+          </Form.Item>
 
-        {/* Role Selection */}
-        <select
-          style={styles.select}
-          value={formData.role}
-          onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-        >
-          <option value="Technician">Technician</option>
-          <option value="Admin">Admin</option>
-        </select>
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              { required: true, message: "Please enter a password" },
+              { min: 6, message: "Password must be at least 6 characters" },
+            ]}
+          >
+            <Input.Password size="large" prefix={<LockOutlined />} placeholder="Password" />
+          </Form.Item>
 
-        {/* Submit Button with Spinner */}
-        <button type="submit" style={styles.button} disabled={loading}>
-          {loading ? <FaSpinner className="spinner" /> : "Register"}
-        </button>
-      </form>
+          <Form.Item
+            label="Confirm Password"
+            name="confirmPassword"
+            rules={[{ required: true, message: "Please confirm your password" }]}
+          >
+            <Input.Password
+              size="large"
+              prefix={<LockOutlined />}
+              placeholder="Confirm Password"
+            />
+          </Form.Item>
+
+          <Form.Item label="Role" name="role" rules={[{ required: true, message: "Select a role" }]}>
+            <Select size="large" prefix={<IdcardOutlined />}>
+              <Select.Option value="Technician">Technician</Select.Option>
+              <Select.Option value="Admin">Admin</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Button
+            type="primary"
+            htmlType="submit"
+            size="large"
+            block
+            loading={loading}
+            style={{ marginTop: 8 }}
+          >
+            Register
+          </Button>
+
+          <div style={{ marginTop: 14, textAlign: "center" }}>
+            <Text type="secondary">
+              Already have an account? <Link to="/">Login</Link>
+            </Text>
+          </div>
+        </Form>
+      </Card>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-    background: "linear-gradient(135deg, #f7f7f7, #eaeaea)",
-    padding: "20px",
-  },
-  form: {
-    width: "400px",
-    background: "#fff",
-    borderRadius: "10px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-    padding: "30px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  logoContainer: {
-    marginBottom: "20px",
-    textAlign: "center",
-  },
-  logo: {
-    width: "200px",
-    height: "auto",
-    objectFit: "contain",
-  },
-  header: {
-    marginBottom: "20px",
-    color: "#333",
-    fontSize: "24px",
-    fontWeight: "bold",
-  },
-  input: {
-    width: "100%",
-    padding: "12px",
-    margin: "10px 0",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    fontSize: "16px",
-    outline: "none",
-    transition: "border 0.3s",
-  },
-  select: {
-    width: "100%",
-    padding: "12px",
-    margin: "10px 0",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    fontSize: "16px",
-    background: "#fff",
-  },
-  button: {
-    width: "100%",
-    padding: "12px",
-    background: "#319ed6",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    fontSize: "16px",
-    fontWeight: "bold",
-    cursor: "pointer",
-    transition: "background 0.3s",
-  },
 };
 
 export default RegisterForm;

@@ -1,82 +1,54 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Descriptions, Spin, Button, message, Modal } from "antd";
-import ClientForm from "./ClientForm"; // Import ClientForm
-import axios from "axios"; // Import axios
-import { fetchClientById, updateClient } from "../../services/clientService"; // API calls
+import ClientForm from "./ClientForm";
+import axios from "axios";
+import { updateClient } from "../../services/clientService";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
 
 const ClientDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate(); // Use navigate for better routing
+  const navigate = useNavigate();
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false); // ✅ Control modal visibility
-
-  // Function to load client details
-  const loadClientDetails = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${API_BASE_URL}/api/clients/${id}/`);
-      setClient(response.data);
-    } catch (error) {
-      message.error("Failed to fetch client details.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Function to handle form submission (updating client)
-  const handleSave = async (values) => {
-    try {
-      const updatedClient = await updateClient(id, values);
-      message.success("Client updated successfully!");
-      setClient(updatedClient);
-      setIsModalVisible(false); // ✅ Close the modal after saving
-    } catch (error) {
-      message.error("Failed to update client. Please try again.");
-    }
-  };
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    let isMounted = true; // Prevent memory leak
+    let isMounted = true;
 
     const fetchClient = async () => {
       setLoading(true);
       try {
         const response = await axios.get(`${API_BASE_URL}/api/clients/${id}/`);
-        if (isMounted) {
-          setClient(response.data);
-        }
+        if (isMounted) setClient(response.data);
       } catch (error) {
-        if (isMounted) {
-          message.error("Failed to fetch client details.");
-        }
+        if (isMounted) message.error("Failed to fetch client details.");
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchClient();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [id]);
 
-  if (loading) {
-    return <Spin />;
-  }
+  const handleSave = async (values) => {
+    try {
+      const updated = await updateClient(id, values);
+      message.success("Client updated successfully!");
+      setClient(updated);
+      setIsModalVisible(false);
+    } catch (error) {
+      message.error("Failed to update client. Please try again.");
+    }
+  };
 
-  if (!client) {
-    return <p>Client not found.</p>;
-  }
+  if (loading) return <Spin />;
+  if (!client) return <p>Client not found.</p>;
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+    <div style={{ maxWidth: "900px", margin: "0 auto" }}>
       <h1>Client Details</h1>
 
       <Descriptions bordered column={2}>
@@ -91,23 +63,27 @@ const ClientDetails = () => {
         <Descriptions.Item label="Projects Count">{client.project_count || 0}</Descriptions.Item>
       </Descriptions>
 
-      <div style={{ marginTop: "16px", textAlign: "right" }}>
+      <div style={{ marginTop: 16, textAlign: "right" }}>
         <Button type="primary" onClick={() => setIsModalVisible(true)}>
           Edit
         </Button>
-        <Button style={{ marginLeft: "8px" }} onClick={() => navigate(-1)}>
-          Back to Clients
+        <Button style={{ marginLeft: 8 }} onClick={() => navigate(-1)}>
+          Back
         </Button>
       </div>
 
-      {/* ✅ Edit Client Form in a Pop-up Modal */}
       <Modal
         title="Edit Client"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
-        footer={null} // ✅ Form handles submission, so we don't need buttons here
+        footer={null}
+        destroyOnClose
       >
-        <ClientForm initialValues={client} onSubmit={handleSave} />
+        <ClientForm
+          initialValues={client}
+          onSubmit={handleSave}
+          onCancel={() => setIsModalVisible(false)}
+        />
       </Modal>
     </div>
   );

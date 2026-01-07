@@ -1,19 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Input, Modal, Form, message, Popconfirm, Spin, Select } from "antd";
+import {
+  Table,
+  Button,
+  Input,
+  Modal,
+  Form,
+  message,
+  Popconfirm,
+  Spin,
+  Card,
+  Row,
+  Col,
+  Typography,
+  Space,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ClientForm from "./ClientForm";
 
-const { Option } = Select;
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
 
 const ClientManager = () => {
   const [clients, setClients] = useState([]);
+  const [filteredClients, setFilteredClients] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredClients, setFilteredClients] = useState([]);
+
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -35,32 +51,32 @@ const ClientManager = () => {
   }, []);
 
   useEffect(() => {
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    const filtered = clients.filter(
-      (c) =>
-        (c.client_name?.toLowerCase() || "").includes(lowerCaseQuery) ||
-        (c.client_abbreviation?.toLowerCase() || "").includes(lowerCaseQuery)
+    const q = searchQuery.toLowerCase();
+    setFilteredClients(
+      clients.filter(
+        (c) =>
+          String(c.client_name || "").toLowerCase().includes(q) ||
+          String(c.client_abbreviation || "").toLowerCase().includes(q)
+      )
     );
-    setFilteredClients(filtered);
   }, [clients, searchQuery]);
 
   const handleSaveClient = async (values) => {
     try {
-      let response;
       if (editingClient) {
-        response = await axios.put(
+        await axios.put(
           `${API_BASE_URL}/api/clients/${editingClient.client_id}/`,
           values
         );
       } else {
-        response = await axios.post(`${API_BASE_URL}/api/clients/`, values);
+        await axios.post(`${API_BASE_URL}/api/clients/`, values);
       }
 
       message.success("Client saved successfully!");
-      await fetchClients();
       setIsModalVisible(false);
       setEditingClient(null);
       form.resetFields();
+      fetchClients();
     } catch (error) {
       message.error("Failed to save client.");
     }
@@ -78,7 +94,11 @@ const ClientManager = () => {
 
   const columns = [
     { title: "Client Name", dataIndex: "client_name", key: "client_name" },
-    { title: "Abbreviation", dataIndex: "client_abbreviation", key: "client_abbreviation" },
+    {
+      title: "Abbreviation",
+      dataIndex: "client_abbreviation",
+      key: "client_abbreviation",
+    },
     { title: "Contact", dataIndex: "client_contact", key: "client_contact" },
     { title: "Phone", dataIndex: "phone", key: "phone" },
     { title: "Email", dataIndex: "email", key: "email" },
@@ -88,55 +108,106 @@ const ClientManager = () => {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <>
-          <Button type="link" onClick={() => navigate(`/clients/${record.client_id}`)}>Details</Button>
+        <Space>
+          <Button
+            type="link"
+            onClick={() => navigate(`/clients/${record.client_id}`)}
+          >
+            Details
+          </Button>
           <Button
             type="link"
             onClick={() => {
               setEditingClient(record);
               setIsModalVisible(true);
+              setTimeout(() => form.resetFields(), 0);
             }}
           >
             Edit
           </Button>
-          <Popconfirm title="Are you sure?" onConfirm={() => handleDeleteClient(record.client_id)} okText="Yes" cancelText="No">
-            <Button type="link" danger>Delete</Button>
+          <Popconfirm
+            title="Delete this client?"
+            onConfirm={() => handleDeleteClient(record.client_id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="link" danger>
+              Delete
+            </Button>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];
 
   return (
-    <div className="page-container" style={{ padding: "16px" }}>
-      <h1>Client Manager</h1>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
-        <Input.Search
-          placeholder="Search by Client Name or Abbreviation"
-          allowClear
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ width: "300px" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => {
-            setEditingClient(null);
-            setIsModalVisible(true);
-            setTimeout(() => form.resetFields(), 100);
-          }}
-        >
-          Add Client
-        </Button>
-      </div>
-      {loading ? <Spin /> : <Table columns={columns} dataSource={filteredClients} rowKey="client_id" pagination={{ pageSize: 8 }} bordered />}
+    <div className="page-container" style={{ maxWidth: 1200, margin: "0 auto" }}>
+      {/* Header */}
+      <Row justify="space-between" align="middle" style={{ marginBottom: 12 }}>
+        <Col>
+          <Typography.Title level={2} style={{ margin: 0 }}>
+            Client Manager
+          </Typography.Title>
+          <Typography.Text type="secondary">
+            Manage clients and company information
+          </Typography.Text>
+        </Col>
+
+        <Col>
+          <Space>
+            <Input.Search
+              placeholder="Search by Client Name or Abbreviation"
+              allowClear
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ width: 300 }}
+            />
+            <Button
+              type="primary"
+              size="middle"
+              onClick={() => {
+                setEditingClient(null);
+                setIsModalVisible(true);
+                setTimeout(() => form.resetFields(), 0);
+              }}
+            >
+              Add Client
+            </Button>
+          </Space>
+        </Col>
+      </Row>
+
+      {/* Table */}
+      <Card className="table-card">
+        {loading ? (
+          <div style={{ display: "flex", justifyContent: "center", padding: 24 }}>
+            <Spin />
+          </div>
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={filteredClients}
+            rowKey="client_id"
+            pagination={{ pageSize: 8, showSizeChanger: true }}
+          />
+        )}
+      </Card>
+
+      {/* Modal */}
       <Modal
         title={editingClient ? "Edit Client" : "Add Client"}
         open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={() => {
+          setIsModalVisible(false);
+          setEditingClient(null);
+        }}
         footer={null}
       >
-        <ClientForm form={form} initialValues={editingClient} onSubmit={handleSaveClient} />
+        <ClientForm
+          form={form}
+          initialValues={editingClient}
+          onSubmit={handleSaveClient}
+        />
       </Modal>
     </div>
   );

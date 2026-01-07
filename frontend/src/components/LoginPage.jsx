@@ -1,149 +1,182 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // ✅ Correct import
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { FaSpinner } from "react-icons/fa";
-
 import {
-  MDBBtn,
-  MDBContainer,
-  MDBCard,
-  MDBCardBody,
-  MDBCardImage,
-  MDBRow,
-  MDBCol,
-  MDBInput,
-} from "mdb-react-ui-kit";
+  Layout,
+  Card,
+  Form,
+  Input,
+  Button,
+  Typography,
+  Row,
+  Col,
+  message,
+} from "antd";
+import {
+  UserOutlined,
+  LockOutlined,
+  LoginOutlined,
+} from "@ant-design/icons";
 
-import "../App.css";
+const { Content } = Layout;
+const { Title, Text } = Typography;
 
 function LoginPage({ onLogin }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
+  const API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
 
-  const handleLogin = async () => {
-    if (!username || !password) {
-      toast.warn("Please enter both username and password.");
-      return;
-    }
-
-    setLoading(true); // Start loading state
-
+  const handleLogin = async (values) => {
+    setLoading(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/login/`, {
-        username,
-        password,
-      });
+      await axios.post(`${API_BASE_URL}/auth/login/`, values);
 
-      toast.success("Login successful! Redirecting...");
+      message.success("Login successful");
       onLogin();
-      
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 2000); // Redirect after delay for smooth transition
-      
+      navigate("/dashboard");
     } catch (error) {
-      toast.error("Login failed: " + (error.response?.data?.error || "Unknown error"));
+      message.error(
+        error.response?.data?.error || "Invalid username or password"
+      );
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
   return (
-    <MDBContainer className="login-page-container">
-      <ToastContainer /> {/* Toast Notification Container */}
-
-      <MDBCard className="login-card">
-        <MDBRow className="g-0">
-          {/* Left Section with Image */}
-          <MDBCol md="5" className="d-none d-md-block">
-            <MDBCardImage
-              src="/cologne.jpg"
-              alt="login form"
-              className="rounded-start w-100 h-100"
-              style={{ objectFit: "cover" }}
+    <Layout
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #e9eff6, #d3dbe5)",
+      }}
+    >
+      <Content
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 24,
+        }}
+      >
+        <Card
+          style={{
+            maxWidth: 900,
+            width: "100%",
+            borderRadius: 16,
+            boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
+            overflow: "hidden",
+          }}
+          bodyStyle={{ padding: 0 }}
+        >
+          <Row>
+            {/* LEFT IMAGE */}
+            <Col
+              xs={0}
+              md={10}
+              style={{
+                backgroundImage: "url('/cologne.jpg')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
             />
-          </MDBCol>
 
-          {/* Right Section with Form */}
-          <MDBCol md="7" xs="12">
-            <MDBCardBody className="d-flex flex-column justify-content-center align-items-center">
-              {/* Logo */}
-              <div className="text-center mb-4">
-                <img
-                  src="/img1 logo.jpg"
-                  alt="Logo"
-                  className="login-logo"
-                />
-              </div>
-
-              {/* Form Title */}
-              <h5 className="fw-normal mb-4 login-title">
-                Sign into your account
-              </h5>
-
-              {/* Form Inputs */}
-              <MDBInput
-                wrapperClass="mb-3 w-100"
-                label="Username"
-                id="formUsername"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                disabled={loading}
-              />
-              <MDBInput
-                wrapperClass="mb-4 w-100"
-                label="Password"
-                id="formPassword"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-              />
-
-              {/* Login Button with Spinner */}
-              <MDBBtn
-                className="fixed-button"
-                color="dark"
-                onClick={handleLogin}
-                disabled={loading}
+            {/* RIGHT FORM */}
+            <Col xs={24} md={14}>
+              <div
+                style={{
+                  padding: "48px 40px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  height: "100%",
+                }}
               >
-                {loading ? <FaSpinner className="spinner" /> : "Login"}
-              </MDBBtn>
+                {/* LOGO */}
+                <div style={{ textAlign: "center", marginBottom: 24 }}>
+                  <img
+                    src="/img1 logo.jpg"
+                    alt="ElevatorSys"
+                    style={{ height: 60, marginBottom: 12 }}
+                  />
+                  <Title level={4} style={{ marginBottom: 0 }}>
+                    ElevatorSys
+                  </Title>
+                  <Text type="secondary">
+                    Sign in to manage your operations
+                  </Text>
+                </div>
 
-              {/* Forgot Password */}
-              <a className="small text-muted mb-3" href="#!">
-                Forgot password?
-              </a>
+                {/* FORM */}
+                <Form
+                  layout="vertical"
+                  onFinish={handleLogin}
+                  requiredMark={false}
+                >
+                  <Form.Item
+                    label="Username"
+                    name="username"
+                    rules={[{ required: true, message: "Enter your username" }]}
+                  >
+                    <Input
+                      prefix={<UserOutlined />}
+                      placeholder="Username"
+                      size="large"
+                    />
+                  </Form.Item>
 
-              {/* Registration Link */}
-              <p className="mb-4">
-                Don't have an account?{" "}
-                <Link to="/register" className="register-link">
-                  Register here
-                </Link>
-              </p>
+                  <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[{ required: true, message: "Enter your password" }]}
+                  >
+                    <Input.Password
+                      prefix={<LockOutlined />}
+                      placeholder="Password"
+                      size="large"
+                    />
+                  </Form.Item>
 
-              {/* Terms and Policy */}
-              <div className="d-flex flex-row justify-content-center w-100">
-                <a href="#!" className="small text-muted me-3">
-                  Terms of Use
-                </a>
-                <a href="#!" className="small text-muted">
-                  Privacy Policy
-                </a>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    icon={<LoginOutlined />}
+                    loading={loading}
+                    size="large"
+                    block
+                    style={{
+                      marginTop: 12,
+                      height: 44,
+                      fontWeight: 600,
+                    }}
+                  >
+                    Login
+                  </Button>
+                </Form>
+
+                {/* LINKS */}
+                <div
+                  style={{
+                    marginTop: 24,
+                    textAlign: "center",
+                  }}
+                >
+                  <Text type="secondary">
+                    Don’t have an account?{" "}
+                    <Link to="/register">Register here</Link>
+                  </Text>
+                  <br />
+                  <Link to="#" style={{ fontSize: 13 }}>
+                    Forgot password?
+                  </Link>
+                </div>
               </div>
-            </MDBCardBody>
-          </MDBCol>
-        </MDBRow>
-      </MDBCard>
-    </MDBContainer>
+            </Col>
+          </Row>
+        </Card>
+      </Content>
+    </Layout>
   );
 }
 

@@ -19,3 +19,9 @@ export const fetchUsers = async () => {
   const response = await axios.get(`${API_URL}users/`);
   return response.data;
 };
+
+export const logout = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("user");
+};

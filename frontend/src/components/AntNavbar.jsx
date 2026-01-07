@@ -1,28 +1,45 @@
 import React from "react";
-import { Layout } from "antd";
+import { Layout, Space, Typography, Button, Tooltip } from "antd";
+import { BellOutlined, LogoutOutlined } from "@ant-design/icons";
 
 const { Header } = Layout;
 
 const AntNavbar = ({ onLogout }) => {
   return (
     <Header className="ant-navbar">
-      {/* Logo Section */}
-      <div className="logo">
+      {/* Left: Logo + App name */}
+      <Space align="center" className="navbar-left">
         <img
-          src="/img1 logo.jpg" // Replace with the correct logo path
+          src="/img1 logo.jpg"
           alt="ElevatorSys Logo"
+          className="navbar-logo"
         />
-        <span>ElevatorSys</span>
-      </div>
+        <Typography.Text strong className="navbar-title">
+          ElevatorSys
+        </Typography.Text>
+      </Space>
 
-      {/* Action Section */}
-      <div className="actions">
-        <span className="action">🔔 Notifications</span>
-        {/* Logout as a text link */}
-        <span className="action" onClick={onLogout}>
-          Logout
-        </span>
-      </div>
+      {/* Right: Actions */}
+      <Space size="middle" className="navbar-actions">
+        <Tooltip title="Notifications">
+          <Button
+            type="text"
+            icon={<BellOutlined />}
+            className="navbar-icon-btn"
+            aria-label="Notifications"
+          />
+        </Tooltip>
+
+        <Tooltip title="Logout">
+          <Button
+            type="text"
+            icon={<LogoutOutlined />}
+            onClick={onLogout}
+            className="navbar-icon-btn"
+            aria-label="Logout"
+          />
+        </Tooltip>
+      </Space>
     </Header>
   );
 };
