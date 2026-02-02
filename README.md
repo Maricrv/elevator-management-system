@@ -1,27 +1,55 @@
-# Elevator Management System  
-**Full-stack learning and portfolio project based on a real-world elevator services use case**
+# Elevator Management System (EMS)
 
-This repository contains a full-stack web application developed as a **personal learning and portfolio project**, inspired by a real operational scenario in an elevator services company in Germany.
+The Elevator Management System (EMS) is a system designed to model and organize
+the operational processes of a service-based company, inspired by a real
+elevator services context and built from limited initial information.
 
-The system was designed to explore **modern web application architecture** while addressing common operational challenges such as managing clients, projects, personnel, sales, and reports.
+The purpose of this project is to translate real operational workflows into
+a structured system that reflects how work is actually performed, rather than
+to showcase technical complexity.
 
----
+## What this project demonstrates
+- Understanding a business domain with incomplete and evolving inputs
+- Translating operational processes into structured system entities
+- Defining relationships between clients, projects, personnel, and services
+- Designing a system that supports operational visibility and control
 
-## Overview
+## Operational context
+Service-based companies often rely on fragmented tools such as spreadsheets,
+emails, and manual tracking to manage projects and personnel.
 
-The Elevator Management System (EMS) was designed as a learning and portfolio project to explore how a real operational business scenario can be translated into a structured software system.
+This project explores how a single system can:
+- Centralize operational information
+- Reduce manual tracking and duplication
+- Improve visibility of project and personnel status
+- Support decision-making through structured data
 
-Rather than focusing only on coding, this project emphasizes:
-- Business process understanding
-- Functional design
-- System organization
-- User-oriented workflows
+The system design is based on real operational workflows rather than academic
+or hypothetical requirements.
 
-The application reflects common challenges faced by service-based companies, such as tracking projects, managing personnel, and maintaining operational visibility.
+## My role
+I approached this project from a system and operations perspective. My work
+focused on:
 
----
+- Analyzing operational processes and business rules
+- Designing the system structure and data model
+- Defining workflows aligned with real-world scenarios
+- Validating system behavior against practical operational needs
+- Iterating on the design as requirements evolved
 
-## Screenshots
+While this project includes a working technical implementation, the primary
+focus was on representing operational reality through a coherent system
+structure.
+
+## System overview
+The system includes:
+- Client, project, and personnel management
+- Project assignment and status tracking
+- Operational dashboards and reports
+- A structured data model aligned with business workflows
+
+Screenshots below illustrate the main system areas and flows.
+
 
 ### Login
 ![Login](screenshots/login.png)
@@ -114,81 +142,22 @@ The focus is on clarity, maintainability, and alignment with business processes 
 
 ---
 
-## Tech Stack
+## Technical notes (supporting layer)
+The system was implemented using a modern full-stack architecture to support the operational design:
 
 - Frontend: React, Ant Design
 - Backend: Django REST Framework
 - Database: PostgreSQL
-- Authentication: Token-based authentication
-- Version control: Git, GitHub
 - Deployment (prototype): Render (free tier)
 
----
+Technology choices were made to support clarity, maintainability, and alignment with business processes.
 
-## Project evolution
+## Project status
+This project is a portfolio prototype intended to demonstrate system and process-oriented thinking.
 
-### Phase 1 – Conceptual prototype
-- Rapid prototype created to validate the idea
-- Focus on basic workflows and data organization
-- Deployment to a free hosting platform for demonstration purposes
-- Initial exploration of multilingual support (English, German, Spanish)
+Due to free-tier deployment limitations, the live backend and database may not always be available. The project is currently showcased through screenshots and documentation.
 
-This phase was used to validate the concept at a business level.
-
-### Phase 2 – System redesign and learning focus (this repository)
-- Redesign with clear separation between backend and frontend
-- Improved database structure and data modeling
-- Development of REST APIs
-- Implementation of additional modules such as reports
-- Focus on maintainability, scalability concepts, and code organization
-
----
-
-## Learning objectives
-
-This project was developed to:
-
-- Gain hands-on experience building a full-stack web application
-- Practice designing and evolving a relational database
-- Understand backend–frontend communication via APIs
-- Apply modern React patterns and UI components
-- Improve confidence working with real-world inspired systems
-- Practice version control and clean project organization
-
-The project was developed with guidance and support as part of an active learning process.
-
----
-
-## My contribution
-
-I developed this project as a personal initiative. My work included:
-
-- Designing and iterating on the database schema
-- Implementing backend APIs and frontend components
-- Integrating authentication and navigation flows
-- Developing reporting functionality
-- Iterating on the system based on feedback and evolving requirements
-- Managing the project codebase and version control
-
----
-
-## Project Status & Limitations
-
-This project is intended as a portfolio prototype.
-
-Due to free-tier deployment limitations, the live backend and database may not always be available.
-For this reason, the project is currently showcased using screenshots and documentation.
-
-The focus of the project is functional design and system structure rather than production readiness.
-
----
-
-## Future Improvements
-
-- Re-enable full deployment with persistent database
-- Complete reporting module
-- Add role-based permissions in more detail
-- Improve dashboards with operational metrics
-- Enhance UX based on user feedback
+## Key takeaway
+This project illustrates how operational understanding, process analysis, and system thinking can be combined to create structured solutions in environments where requirements are partial and constraints are real.
 
 
